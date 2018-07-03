@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name         = "fitpolo705SDK"    #存储库名称
   s.version      = "0.0.1"      #版本号，与tag值一致
   s.summary      = "fitpolo705 SDK"  #简介
-  s.description  = "fitpolo705 SDK"  #描述
+  s.description  = "fitpolo705是703、705手环开发提供的SDK"  #描述
   s.homepage     = "https://github.com/Fitpolo/fitpolo703705-iOSDemo"      #项目主页，不是git地址
   s.license      = { :type => "MIT", :file => "LICENSE" }   #开源协议
   s.author             = { "lovexiaoxia" => "aadyx2007@163.com" }  #作者
