@@ -8,11 +8,8 @@
 
 #import "fitpolo705Interface+HeartRate.h"
 #import <objc/message.h>
-#import "fitpolo705PeripheralManager.h"
+#import "fitpolo705Defines.h"
 #import "fitpolo705Parser.h"
-#import "fitpolo705OperationManager.h"
-#import "fitpolo705RegularsDefine.h"
-#import "fitpolo705CentralManager.h"
 
 @implementation fitpolo705Interface (HeartRate)
 
@@ -28,7 +25,7 @@
                         failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     NSString *hexTime = [fitpolo705Parser getTimeStringWithDate:date];
     if (!fitpolo705ValidStr(hexTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *commandString = [NSString stringWithFormat:@"%@%@",@"b60105",hexTime];
@@ -50,7 +47,7 @@
                              failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     NSString *hexTime = [fitpolo705Parser getTimeStringWithDate:date];
     if (!fitpolo705ValidStr(hexTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *commandString = [NSString stringWithFormat:@"%@%@",@"b60405",hexTime];
@@ -65,10 +62,9 @@
   commandString:(NSString *)commandString
        sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
       failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
-    fitpolo705PeripheralManager *peripheralManager = [fitpolo705CentralManager sharedInstance].peripheralManager;
-    [peripheralManager addNeedPartOfDataTaskWithTaskID:operationID
-                                           commandData:commandString
-                                        characteristic:fitpolo705HeartRateCharacteristic
+    [[fitpolo705CentralManager sharedInstance] addNeedPartOfDataTaskWithTaskID:operationID
+                                                                   commandData:commandString
+                                                                characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.heartRate
                                           successBlock:^(id returnData) {
                                               NSArray *dataList = returnData[@"result"];
                                               NSMutableArray *resultList = [NSMutableArray array];

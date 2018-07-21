@@ -8,10 +8,11 @@
 
 #import "fitpolo705Interface+StepGauge.h"
 #import <objc/message.h>
-#import "fitpolo705PeripheralManager.h"
 #import "fitpolo705Parser.h"
-#import "fitpolo705OperationManager.h"
-#import "fitpolo705CentralManager.h"
+#import "fitpolo705Defines.h"
+
+//在手环打开监听计步数据的情况下，手环反馈回来的实时计步数据通知
+NSString *const fitpolo705ListeningStateStepDataNotification = @"fitpolo705ListeningStateStepDataNotification";
 
 @implementation fitpolo705Interface (StepGauge)
 
@@ -27,16 +28,36 @@
                    failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     NSString *hexTime = [fitpolo705Parser getTimeStringWithDate:date];
     if (!fitpolo705ValidStr(hexTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *commandString = [NSString stringWithFormat:@"%@%@",@"b40105",hexTime];
-    fitpolo705PeripheralManager *peripheralManager = [fitpolo705CentralManager sharedInstance].peripheralManager;
-    [peripheralManager addNeedPartOfDataTaskWithTaskID:fitpolo705GetStepDataOperation
-                                           commandData:commandString
-                                        characteristic:fitpolo705StepMeterCharacteristic
-                                          successBlock:successBlock
-                                          failureBlock:failedBlock];
+    [[fitpolo705CentralManager sharedInstance] addNeedPartOfDataTaskWithTaskID:fitpolo705GetStepDataOperation
+                                                                   commandData:commandString
+                                                                characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.stepData
+                                                                  successBlock:successBlock
+                                                                  failureBlock:failedBlock];
+}
+
+/**
+ 改变计步监测状态,打开监听状态之后，注册fitpolo705ListeningStateStepDataNotification通知，当手环步数发生改变的时候，会把当前的步数反馈给app
+ 
+ @param open YES:open, NO:close
+ @param sucBlock 成功回调
+ @param failBlock 失败回调
+ */
++ (void)stepChangeMeterMonitoringStatus:(BOOL)open
+                               sucBlock:(fitpolo705CommunicationSuccessBlock)sucBlock
+                              failBlock:(fitpolo705CommunicationFailedBlock)failBlock{
+    NSString *commandString = (open ? @"b4030101" : @"b4030100");
+    [[fitpolo705CentralManager sharedInstance] addTaskWithTaskID:fitpolo705StepChangeMeterMonitoringStatusOperation
+                                                        resetNum:NO
+                                                     commandData:commandString
+                                                  characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.stepData
+                                                    successBlock:^(id returnData) {
+        [fitpolo705Parser operationSetParamsResult:returnData sucBlock:sucBlock failedBlock:failBlock];
+    }
+                            failureBlock:failBlock];
 }
 
 @end

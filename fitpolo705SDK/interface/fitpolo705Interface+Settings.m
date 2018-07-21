@@ -7,13 +7,8 @@
 //
 
 #import "fitpolo705Interface+Settings.h"
-#import "fitpolo705AlarmClockModel.h"
-#import "fitpolo705BlockDefine.h"
-#import "fitpolo705RegularsDefine.h"
+#import "fitpolo705Defines.h"
 #import "fitpolo705Parser.h"
-#import "fitpolo705PeripheralManager.h"
-#import "fitpolo705CustomScreenModel.h"
-#import "fitpolo705CentralManager.h"
 
 @implementation fitpolo705Interface (Settings)
 
@@ -36,14 +31,8 @@
     }
     if (list.count > 8) {
         //报错
-        fitpolo705_main_safe(^{
-            if (failedBlock) {
-                NSError *failedError = [[NSError alloc] initWithDomain:fitpolo705CustomErrorDomain
-                                                                  code:fitpolo705ParamsError
-                                                              userInfo:@{@"errorInfo":@"Most can be set eight clock!"}];
-                failedBlock(failedError);
-            }
-        });
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
+        return;
     }
     fitpolo705WS(weakSelf);
     if (list.count <= 4) {
@@ -77,11 +66,11 @@
                     sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
                    failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (!ancsModel) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     
-    NSString *options = [fitpolo705Parser getAncsCommand:ancsModel];
+    NSString *options = [ancsModel ancsCommand];
     NSString *commandString = [NSString stringWithFormat:@"%@%@%@",@"b20304",@"0000",options];
     [self initTaskWithTaskID:fitpolo705SetANCSOptionsOperation
                commandString:commandString
@@ -113,7 +102,7 @@
                                                           endHour:endHour
                                                        endMinutes:endMinutes];
     if (!fitpolo705ValidStr(tempTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *status = (isOn ? @"01" : @"00");
@@ -135,7 +124,7 @@
                sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
               failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (movingTarget < 1 || movingTarget > 60000) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *targetHex = [NSString stringWithFormat:@"%1lx",(unsigned long)movingTarget];
@@ -200,10 +189,10 @@
                       sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
                      failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (!screenModel) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
-    NSString *commandString1 = [fitpolo705Parser getCustomScreenString:screenModel];
+    NSString *commandString1 = [screenModel customScreenCommand];
     NSString *commandString = [@"b209040000" stringByAppendingString:commandString1];
     [self initTaskWithTaskID:fitpolo705SetScreenDisplayOperation
                commandString:commandString
@@ -274,7 +263,7 @@
                                                           endHour:endHour
                                                        endMinutes:endMinutes];
     if (!fitpolo705ValidStr(tempTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *status = (isOn ? @"01" : @"00");
@@ -309,7 +298,7 @@
                                                           endHour:endHour
                                                        endMinutes:endMinutes];
     if (!fitpolo705ValidStr(tempTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *status = (open ? @"01" : @"00");
@@ -342,7 +331,7 @@
         || height > 200
         || !date) {
         //参数错误
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -405,7 +394,7 @@
        sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
       failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (!date) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -413,19 +402,12 @@
     NSString *dateString = [formatter stringFromDate:date];
     NSArray *dateList = [dateString componentsSeparatedByString:@"-"];
     if (!fitpolo705ValidArray(dateList) || dateList.count != 6) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSInteger year = [dateList[0] integerValue];
     if (year < 2000 || year > 2099) {
-        fitpolo705_main_safe(^{
-            if (failedBlock) {
-                NSError *failedError = [[NSError alloc] initWithDomain:fitpolo705CustomErrorDomain
-                                                                  code:fitpolo705ParamsError
-                                                              userInfo:@{@"errorInfo":@"Set the date should be between 2000 to 2099"}];
-                failedBlock(failedError);
-            }
-        });
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *yearString = [NSString stringWithFormat:@"%1lx",(long)(year - 2000)];
@@ -442,6 +424,29 @@
     }
     NSString *commandString = [@"b20f06" stringByAppendingString:yearString];
     [self initTaskWithTaskID:fitpolo705SetDateOperation
+               commandString:commandString
+                    sucBlock:successBlock
+                   failBlock:failedBlock];
+}
+
+/**
+ 设置设备表盘样式
+
+ @param dialStyle 表盘样式
+ @param successBlock 成功回调
+ @param failedBlock 失败回调
+ */
++ (void)setDialStyle:(fitpolo705DialStyle)dialStyle
+            sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
+           failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
+    NSString *style = @"01";
+    if (dialStyle == fitpolo705DialStyle2) {
+        style = @"02";
+    }else if (dialStyle == fitpolo705DialStyle3){
+        style = @"03";
+    }
+    NSString *commandString = [@"b21001" stringByAppendingString:style];
+    [self initTaskWithTaskID:fitpolo705SetDialStyleOperation
                commandString:commandString
                     sucBlock:successBlock
                    failBlock:failedBlock];
@@ -467,23 +472,14 @@
              commandString:(NSString *)commandString
                   sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
                  failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
-    fitpolo705PeripheralManager *peripheralManager = [fitpolo705CentralManager sharedInstance].peripheralManager;
-    [peripheralManager addTaskWithTaskID:taskID resetNum:NO commandData:commandString characteristic:fitpolo705SetConfigCharacteristic successBlock:^(id returnData) {
-        BOOL resultStatus = [returnData[@"result"][@"result"] boolValue];
-        if (!resultStatus) {
-            fitpolo705SetParamError(failedBlock);
-            return ;
-        }
-        NSDictionary *resultDic = @{@"msg":@"success",
-                                    @"code":@"1",
-                                    @"result":@{},
-                                    };
-        fitpolo705_main_safe(^{
-            if (successBlock) {
-                successBlock(resultDic);
-            }
-        });
-    } failureBlock:failedBlock];
+    [[fitpolo705CentralManager sharedInstance] addTaskWithTaskID:taskID
+                                resetNum:NO
+                             commandData:commandString
+                          characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.writeData
+                            successBlock:^(id returnData) {
+        [fitpolo705Parser operationSetParamsResult:returnData sucBlock:successBlock failedBlock:failedBlock];
+    }
+                            failureBlock:failedBlock];
 }
 
 /**
@@ -497,7 +493,7 @@
                                 sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
                                failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (numbers > 2 || numbers < 0) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *numbersHex = [NSString stringWithFormat:@"%1lx",(long)numbers];
@@ -522,32 +518,18 @@
                          sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
                         failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     if (!fitpolo705ValidArray(list)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     NSString *clockDatas = @"";
     for (NSInteger i = 0; i < list.count; i ++) {
         fitpolo705AlarmClockModel *clockModel = list[i];
-        if (clockModel.hour < 0 || clockModel.hour > 23) {
-            fitpolo705ParamsError(failedBlock);
+        NSString *command = [clockModel fetchCommand];
+        if (!fitpolo705ValidStr(command)) {
+            [fitpolo705Parser operationParamsErrorBlock:failedBlock];
             return;
         }
-        if (clockModel.minutes < 0 || clockModel.minutes > 59) {
-            fitpolo705ParamsError(failedBlock);
-            return;
-        }
-        NSString *clockType = [fitpolo705Parser getAlarmClockType:clockModel.clockType];
-        NSString *clockSetting = [fitpolo705Parser getAlarlClockSetInfo:clockModel.statusModel isOn:clockModel.isOn];
-        NSString *hexHour = [NSString stringWithFormat:@"%1lx",(unsigned long)clockModel.hour];
-        if (hexHour.length == 1) {
-            hexHour = [@"0" stringByAppendingString:hexHour];
-        }
-        NSString *hexMin = [NSString stringWithFormat:@"%1lx",(unsigned long)clockModel.minutes];
-        if (hexMin.length == 1) {
-            hexMin = [@"0" stringByAppendingString:hexMin];
-        }
-        NSString *tempDatas = [NSString stringWithFormat:@"%@%@%@%@",clockType,clockSetting,hexHour,hexMin];
-        clockDatas = [clockDatas stringByAppendingString:tempDatas];
+        clockDatas = [clockDatas stringByAppendingString:command];
     }
     NSString *lenHex = [NSString stringWithFormat:@"%1lx",(unsigned long)(clockDatas.length / 2)];
     if (lenHex.length == 1) {

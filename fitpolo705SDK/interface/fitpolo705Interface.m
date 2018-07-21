@@ -8,12 +8,9 @@
 
 #import "fitpolo705Interface.h"
 #import <objc/message.h>
-#import "fitpolo705PeripheralManager.h"
-#import "fitpolo705Parser.h"
 #import "fitpolo705TaskOperation.h"
-#import "fitpolo705OperationManager.h"
-#import "fitpolo705RegularsDefine.h"
-#import "fitpolo705CentralManager.h"
+#import "fitpolo705Defines.h"
+#import "fitpolo705Parser.h"
 
 typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
     fitpolo705RequestSleepIndexDataWithTimeStamp,   //时间戳请求睡眠index数据
@@ -37,7 +34,7 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
     [self addTaskWithTaskID:fitpolo705GetAlarmClockOperation resetNum:YES commandString:commandString sucBlock:^(id returnData) {
         NSArray *list = returnData[@"result"];
         if (!list) {
-            fitpolo705RequestPeripheralDataError(failBlock);
+            [fitpolo705Parser operationRequestDataErrorBlock:failBlock];
             return ;
         }
         NSMutableArray *resultList = [NSMutableArray array];
@@ -242,6 +239,22 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
 }
 
 /**
+ 获取手环表盘样式
+
+ @param sucBlock 成功回调
+ @param failBlock 失败回调
+ */
++ (void)readPeripheralDialStyleWithSucBlock:(fitpolo705CommunicationSuccessBlock)sucBlock
+                                  failBlock:(fitpolo705CommunicationFailedBlock)failBlock{
+    NSString *commandString = @"b00f00";
+    [self addTaskWithTaskID:fitpolo705GetDialStyleOperation
+                   resetNum:NO
+              commandString:commandString
+                   sucBlock:sucBlock
+                  failBlock:failBlock];
+}
+
+/**
  获取手环硬件参数
  
  @param sucBlock 成功回调
@@ -287,7 +300,7 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
     [self requestPeripheralDataWithDate:date dataType:fitpolo705RequestSleepIndexDataWithTimeStamp sucBlock:^(id sleepIndexData) {
         NSArray *indexList = sleepIndexData[@"result"];
         if (!indexList) {
-            fitpolo705RequestPeripheralDataError(failedBlock);
+            [fitpolo705Parser operationRequestDataErrorBlock:failedBlock];
             return;
         }
         if (indexList.count == 0) {
@@ -305,12 +318,12 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
         [weakSelf requestPeripheralDataWithDate:date dataType:fitpolo705RequestSleepRecordDataWithTimeStamp sucBlock:^(id sleepRecordData) {
             NSArray *recordList = sleepRecordData[@"result"];
             if (!fitpolo705ValidArray(recordList)) {
-                fitpolo705RequestPeripheralDataError(failedBlock);
+                [fitpolo705Parser operationRequestDataErrorBlock:failedBlock];
                 return;
             }
             NSArray *sleepList = [fitpolo705Parser getSleepDataList:indexList recordList:recordList];
             if (!fitpolo705ValidArray(sleepList)) {
-                fitpolo705RequestPeripheralDataError(failedBlock);
+                [fitpolo705Parser operationRequestDataErrorBlock:failedBlock];
                 return;
             }
             NSDictionary *resultDic = @{@"msg":@"success",
@@ -397,13 +410,12 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
             commandString:(NSString *)commandString
                  sucBlock:(fitpolo705CommunicationSuccessBlock)sucBlock
                 failBlock:(fitpolo705CommunicationFailedBlock)failBlock{
-    fitpolo705PeripheralManager *peripheralManager = [fitpolo705CentralManager sharedInstance].peripheralManager;
-    [peripheralManager addTaskWithTaskID:taskID
-                                resetNum:resetNum
-                             commandData:commandString
-                          characteristic:fitpolo705ReadConfigCharacteristic
-                            successBlock:sucBlock
-                            failureBlock:failBlock];
+    [[fitpolo705CentralManager sharedInstance] addTaskWithTaskID:taskID
+                                                        resetNum:resetNum
+                                                     commandData:commandString
+                                                  characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.readData
+                                                    successBlock:sucBlock
+                                                    failureBlock:failBlock];
 }
 
 + (void)requestPeripheralDataWithDate:(NSDate *)date
@@ -412,7 +424,7 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
                             failBlock:(fitpolo705CommunicationFailedBlock)failedBlock{
     NSString *hexTime = [fitpolo705Parser getTimeStringWithDate:date];
     if (!fitpolo705ValidStr(hexTime)) {
-        fitpolo705ParamsError(failedBlock);
+        [fitpolo705Parser operationParamsErrorBlock:failedBlock];
         return;
     }
     //默认是睡眠概况
@@ -428,12 +440,11 @@ typedef NS_ENUM(NSInteger, fitpolo705RequestDataWithTimeStamp) {
         operationID = fitpolo705GetSportsDataOperation;
     }
     NSString *commandString = [NSString stringWithFormat:@"%@%@%@%@",@"b0",function,@"05",hexTime];
-    fitpolo705PeripheralManager *peripheralManager = [fitpolo705CentralManager sharedInstance].peripheralManager;
-    [peripheralManager addNeedPartOfDataTaskWithTaskID:operationID
-                                           commandData:commandString
-                                        characteristic:fitpolo705ReadConfigCharacteristic
-                                          successBlock:successBlock
-                                          failureBlock:failedBlock];
+    [[fitpolo705CentralManager sharedInstance] addNeedPartOfDataTaskWithTaskID:operationID
+                                                                   commandData:commandString
+                                                                characteristic:[fitpolo705CentralManager sharedInstance].connectedPeripheral.readData
+                                                                  successBlock:successBlock
+                                                                  failureBlock:failedBlock];
 }
 
 @end

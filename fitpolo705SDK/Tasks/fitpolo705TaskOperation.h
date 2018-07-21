@@ -27,7 +27,8 @@ extern NSString *const fitpolo705AdditionalInformation;
 extern NSString *const fitpolo705DataInformation;
 extern NSString *const fitpolo705DataStatusLev;
 
-@interface fitpolo705TaskOperation : NSOperation
+@protocol CBPeripheralDelegate;
+@interface fitpolo705TaskOperation : NSOperation<CBPeripheralDelegate>
 
 /**
  接受定时器超时时间，默认为2s

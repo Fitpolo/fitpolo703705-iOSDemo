@@ -8,10 +8,11 @@
 
 #import "HCKMainViewController.h"
 #import "fitpolo705SDK.h"
+#import "fitpolo705Defines.h"
 
 static NSString *const mainCellIdenty = @"mainCellIdenty";
 
-@interface HCKMainViewController ()<UITableViewDelegate, UITableViewDataSource>
+@interface HCKMainViewController ()<UITableViewDelegate, UITableViewDataSource, fitpolo705ScanPeripheralDelegate, fitpolo705CentralManagerStateDelegate>
 
 @property (nonatomic, strong)UIButton *button;
 
@@ -32,6 +33,8 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
     [self.view addSubview:self.button];
     [self.view addSubview:self.tableView];
     [self loadData];
+    [fitpolo705CentralManager sharedInstance].scanDelegate = self;
+    [fitpolo705CentralManager sharedInstance].managerStateDelegate = self;
 }
 
 #pragma mark -
@@ -55,6 +58,28 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self didSelectedRow:indexPath.row];
+}
+
+#pragma mark - fitpolo705ScanPeripheralDelegate
+- (void)centralManagerStartScan:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"开始扫描");
+}
+
+- (void)centralManagerScanningNewPeripheral:(CBPeripheral *)peripheral macAddress:(NSString *)macAddress peripheralName:(NSString *)peripheralName centralManager:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"扫描到的设备:%@===%@====%@",peripheral.identifier.UUIDString,macAddress,peripheralName);
+}
+
+- (void)centralManagerStopScan:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"停止扫描");
+}
+
+#pragma mark - fitpolo705CentralManagerStateDelegate
+- (void)centralManagerStateChanged:(fitpolo705CentralManagerState)managerState manager:(fitpolo705CentralManager *)manager{
+    NSLog(@"中心蓝牙状态发生改变");
+}
+
+- (void)centralManagerConnectStateChanged:(fitpolo705ConnectStatus)connectState manager:(fitpolo705CentralManager *)manager{
+    NSLog(@"外设连接状态发生改变::::%@",@(connectState));
 }
 
 #pragma mark -
@@ -107,7 +132,7 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
 
 - (void)buttonPressed{
     fitpolo705WS(weakSelf);//@"E4-E2"
-    [[fitpolo705CentralManager sharedInstance] connectPeripheralWithIdentifier:@"B6-C1" connectType:fitpolo705ConnectPeripheralWithMacAddressLowFour peripheralType:operationPeripheralTypeFitpolo705 connectSuccessBlock:^(CBPeripheral *connectedPeripheral, NSString *macAddress, NSString *peripheralName) {
+    [[fitpolo705CentralManager sharedInstance] connectPeripheralWithIdentifier:@"26-CB"peripheralType:operationPeripheralTypeFitpolo705 connectSuccessBlock:^(CBPeripheral *connectedPeripheral, NSString *macAddress, NSString *peripheralName) {
         [weakSelf showAlertWithMsg:@"Connect Success"];
     } connectFailBlock:^(NSError *error) {
         [weakSelf showAlertWithMsg:error.userInfo[@"errorInfo"]];
@@ -117,49 +142,49 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
 - (void)didSelectedRow:(NSInteger)row{
     if (row == 0) {
         [fitpolo705Interface readPeripheralAlarmClockDatasWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 1){
         [fitpolo705Interface readPeripheralAncsOptionsWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 2){
         [fitpolo705Interface readPeripheralSedentaryRemindDataWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 3){
         [fitpolo705Interface readPeripheralMovingTargetWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 4){
         [fitpolo705Interface readPeripheralUnitDataWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 5){
         [fitpolo705Interface readPeripheralTimeFormatDataWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 6){
         [fitpolo705Interface readPeripheralCustomScreenDisplayWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
     }else if (row == 7){
         [fitpolo705Interface readPeripheralRemindLastScreenDisplayWithSucBlock:^(id returnData) {
-            NSLog(@"Success");
+            NSLog(@"%@",returnData);
         } failBlock:^(NSError *error) {
             NSLog(@"%@",error.description);
         }];
@@ -352,7 +377,7 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
         }];
     }else if (row == 34){
         fitpolo705WS(weakSelf);
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"BORD_EE_01" ofType:@"bin"];
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"BORD_805_01" ofType:@"bin"];
         NSData *fileData = [NSData dataWithContentsOfFile:filePath];
         [self.updateManager startUpdateProcessWithPackageData:fileData successBlock:^{
             [weakSelf showAlertWithMsg:@"Success"];

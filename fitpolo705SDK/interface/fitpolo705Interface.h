@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "fitpolo705BlockDefine.h"
+#import "fitpolo705CentralManager.h"
+#import "CBPeripheral+Characteristic.h"
 
 @interface fitpolo705Interface : NSObject
 
@@ -114,6 +115,14 @@
  */
 + (void)readPeripheralUserInfoWithSucBlock:(fitpolo705CommunicationSuccessBlock)sucBlock
                                  failBlock:(fitpolo705CommunicationFailedBlock)failBlock;
+/**
+ 获取手环表盘样式
+ 
+ @param sucBlock 成功回调
+ @param failBlock 失败回调
+ */
++ (void)readPeripheralDialStyleWithSucBlock:(fitpolo705CommunicationSuccessBlock)sucBlock
+                                  failBlock:(fitpolo705CommunicationFailedBlock)failBlock;
 /**
  获取手环硬件参数
  

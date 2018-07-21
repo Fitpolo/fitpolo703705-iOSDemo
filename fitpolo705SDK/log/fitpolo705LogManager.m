@@ -8,7 +8,7 @@
 
 #import "fitpolo705LogManager.h"
 #import <objc/runtime.h>
-#import "fitpolo705RegularsDefine.h"
+#import "fitpolo705Defines.h"
 
 static const char *formatterKey = "formatterKey";
 static NSString *const localFileName = @"/HCKCommunicationData.txt";
@@ -90,6 +90,14 @@ static NSString *const localFileName = @"/HCKCommunicationData.txt";
         }
         [fileHandle closeFile];
     }
+}
+
++ (void)writeCommandToLocalFile:(NSString *)data
+                 withSourceInfo:(fitpolo705DataDirection)source
+                    operationID:(fitpolo705TaskOperationID)operationID{
+    NSString *commandType = [self getCommandType:operationID];
+    NSString *string = [NSString stringWithFormat:@"%@:%@",commandType,data];
+    [self writeCommandToLocalFile:@[string] withSourceInfo:source];
 }
 
 /**
@@ -257,6 +265,97 @@ static NSString *const localFileName = @"/HCKCommunicationData.txt";
         objc_setAssociatedObject(self, &formatterKey, formatter, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return formatter;
+}
+
++ (NSString *)getCommandType:(fitpolo705TaskOperationID)operationID{
+    switch (operationID) {
+        case fitpolo705GetAlarmClockOperation:
+            return @"读取手环闹钟数据";
+        case fitpolo705GetAncsOptionsOperation:
+            return @"读取手环ancs选项";
+        case fitpolo705GetSedentaryRemindOperation:
+            return @"读取手环久坐提醒数据";
+        case fitpolo705GetMovingTargetOperation:
+            return @"读取手环运动目标值";
+        case fitpolo705GetUnitDataOperation:
+            return @"读取手环单位信息";
+        case fitpolo705GetTimeFormatDataOperation:
+            return @"读取手环时间进制";
+        case fitpolo705GetCustomScreenDisplayOperation:
+            return @"读取手环屏幕显示";
+        case fitpolo705GetRemindLastScreenDisplayOperation:
+            return @"读取是否显示上一次屏幕";
+        case fitpolo705GetHeartRateAcquisitionIntervalOperation:
+            return @"读取心率采集间隔";
+        case fitpolo705GetDoNotDisturbTimeOperation:
+            return @"读取勿扰时段";
+        case fitpolo705GetPalmingBrightScreenOperation:
+            return @"读取翻腕亮屏信息";
+        case fitpolo705GetUserInfoOperation:
+            return @"读取个人信息";
+        case fitpolo705GetSportsDataOperation:
+            return @"读取运动信息";
+        case fitpolo705GetLastChargingTimeOperation:
+            return @"读取上一次手环充电时间";
+        case fitpolo705GetBatteryOperation:
+            return @"读取手环电池电量";
+        case fitpolo705VibrationOperation:
+            return @"手环震动";
+        case fitpolo705SetUnitOperation:
+            return @"设置单位信息";
+        case fitpolo705SetANCSOptionsOperation:
+            return @"设置ancs通知选项";
+        case fitpolo705SetDateOperation:
+            return @"设置日期";
+        case fitpolo705SetUserInfoOperation:
+            return @"设置个人信息";
+        case fitpolo705SetTimeFormatOperation:
+            return @"设置时间进制格式";
+        case fitpolo705OpenPalmingBrightScreenOperation:
+            return @"设置翻腕亮屏";
+        case fitpolo705SetAlarmClockOperation:
+            return @"设置闹钟";
+        case fitpolo705RemindLastScreenDisplayOperation:
+            return @"设置上一次屏幕显示";
+        case fitpolo705SetSedentaryRemindOperation:
+            return @"设置久坐提醒";
+        case fitpolo705SetHeartRateAcquisitionIntervalOperation:
+            return @"设置心率采集间隔";
+        case fitpolo705SetScreenDisplayOperation:
+            return @"设置屏幕显示";
+        case fitpolo705GetHardwareParametersOperation:
+            return @"获取硬件参数";
+        case fitpolo705GetFirmwareVersionOperation:
+            return @"获取固件版本号";
+        case fitpolo705GetStepDataOperation:
+            return @"获取计步数据";
+        case fitpolo705GetSleepIndexOperation:
+            return @"获取睡眠index数据";
+        case fitpolo705GetSleepRecordOperation:
+            return @"获取睡眠record数据";
+        case fitpolo705GetHeartDataOperation:
+            return @"获取心率数据";
+        case fitpolo705StartUpdateOperation:
+            return @"开启手环升级";
+        case fitpolo705SetMovingTargetOperation:
+            return @"设置运动目标";
+        case fitpolo705SetDoNotDisturbTimeOperation:
+            return @"设置勿扰时段";
+        case fitpolo705GetSportHeartDataOperation:
+            return @"获取运动心率数据";
+        case fitpolo705SetAlarmClockNumbersOperation:
+            return @"设置闹钟组数";
+        case fitpolo705GetANCSConnectStatusOperation:
+            return @"获取手环ancs连接状态";
+        case fitpolo705GetDialStyleOperation:
+            return @"获取手环表盘样式";
+        case fitpolo705SetDialStyleOperation:
+            return @"设置表盘样式";
+        case fitpolo705StepChangeMeterMonitoringStatusOperation:
+            return @"改变计步监听功能状态";
+        case fitpolo705DefaultTaskOperationID:
+            return @"";
+    }
 }
 
 @end

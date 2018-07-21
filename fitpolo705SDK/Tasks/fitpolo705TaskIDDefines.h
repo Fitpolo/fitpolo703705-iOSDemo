@@ -1,6 +1,6 @@
 
 typedef NS_ENUM(NSInteger, fitpolo705TaskOperationID) {
-    
+    fitpolo705DefaultTaskOperationID,           //默认的初始值
 #pragma mark - 读取设置
     fitpolo705GetAlarmClockOperation,           //读取闹钟数据
     fitpolo705GetAncsOptionsOperation,          //读取ancs选项
@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, fitpolo705TaskOperationID) {
     fitpolo705GetDoNotDisturbTimeOperation,     //读取勿扰时段
     fitpolo705GetPalmingBrightScreenOperation,  //获取翻腕亮屏信息
     fitpolo705GetUserInfoOperation,             //获取用户设置的个人信息
+    fitpolo705GetDialStyleOperation,            //获取表盘样式
     fitpolo705GetHardwareParametersOperation,    //获取硬件参数
     fitpolo705GetFirmwareVersionOperation,       //获取固件版本号
     fitpolo705GetSleepIndexOperation,            //获取睡眠index数据
@@ -37,11 +38,13 @@ typedef NS_ENUM(NSInteger, fitpolo705TaskOperationID) {
     fitpolo705OpenPalmingBrightScreenOperation,  //设置翻腕亮屏
     fitpolo705SetUserInfoOperation,              //设置个人信息
     fitpolo705SetDateOperation,                  //设置日期
+    fitpolo705SetDialStyleOperation,             //设置表盘样式
     fitpolo705VibrationOperation,                //震动指令
     fitpolo705SetANCSOptionsOperation,           //设置开启ancs的选项
     
 #pragma mark - 计步
     fitpolo705GetStepDataOperation,              //获取计步数据
+    fitpolo705StepChangeMeterMonitoringStatusOperation ,    //计步数据监听状态
     
     fitpolo705StartUpdateOperation,              //开启升级
     

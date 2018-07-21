@@ -1,3 +1,12 @@
+//
+//  CBPeripheral+Characteristic.h
+//  fitpolo705SDKDemo
+//
+//  Created by aa on 2018/7/19.
+//  Copyright © 2018年 HCK. All rights reserved.
+//
+
+#import <CoreBluetooth/CoreBluetooth.h>
 
 #pragma mark - /*=======================  扫描过滤服务  =======================*/
 static NSString *const scanServiceUUID = @"FFC0";
@@ -26,3 +35,22 @@ static NSString *const updateServiceUUID = @"FFC0";
 static NSString *const updateWriteUUID = @"FFC1";
 
 static NSString *const updateNotifyUUID = @"FFC2";
+
+@interface CBPeripheral (Characteristic)
+
+@property (nonatomic, strong, readonly)CBCharacteristic *readData;
+
+@property (nonatomic, strong, readonly)CBCharacteristic *writeData;
+
+@property (nonatomic, strong, readonly)CBCharacteristic *stepData;
+
+@property (nonatomic, strong, readonly)CBCharacteristic *heartRate;
+
+@property (nonatomic, strong, readonly)CBCharacteristic *updateWrite;
+
+@property (nonatomic, strong, readonly)CBCharacteristic *updateNotify;
+
+- (void)updateCharacteristicsForService:(CBService *)service;
+- (BOOL)connectSuccess;
+
+@end

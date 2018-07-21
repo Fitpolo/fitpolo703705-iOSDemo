@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "fitpolo705TaskIDDefines.h"
 
 typedef NS_ENUM(NSInteger, fitpolo705DataDirection) {
     fitpolo705DataSourceAPP,          //来自于app-->device的数据
@@ -23,6 +24,10 @@ typedef NS_ENUM(NSInteger, fitpolo705DataDirection) {
  */
 + (void)writeCommandToLocalFile:(NSArray *)dataList
                  withSourceInfo:(fitpolo705DataDirection )source;
+
++ (void)writeCommandToLocalFile:(NSString *)data
+                 withSourceInfo:(fitpolo705DataDirection)source
+                    operationID:(fitpolo705TaskOperationID)operationID;
 
 /**
  读取本地存储的命令数据

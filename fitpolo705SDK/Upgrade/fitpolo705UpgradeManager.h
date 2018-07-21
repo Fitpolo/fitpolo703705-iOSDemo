@@ -33,12 +33,12 @@ typedef void(^fitpolo705UpdateProgressBlock)(CGFloat progress);
 /**
  是否正在升级,升级开始的时候，需要断开手环连接，然后重新连接手环，这个时候手环会处于高速模式，才能进行升级,如果是这种情形下引起的手环连接状态发生改变，主页面需要区分开来
  */
-@property (nonatomic, assign)BOOL switchHighModel;
+@property (nonatomic, assign, readonly)BOOL switchHighModel;
 
 /**
  是否处于升级状态，如果是升级状态，从后台切刀切到前台的时候，不能请求数据
  */
-@property (nonatomic, assign)BOOL updating;
+@property (nonatomic, assign, readonly)BOOL updating;
 
 /**
  开启手环固件升级流程

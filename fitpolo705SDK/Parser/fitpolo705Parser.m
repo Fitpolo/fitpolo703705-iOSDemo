@@ -7,15 +7,128 @@
 //
 
 #import "fitpolo705Parser.h"
-#import "fitpolo705RegularsDefine.h"
-#import "fitpolo705AncsModel.h"
-#import "fitpolo705CustomScreenModel.h"
+#import "fitpolo705Defines.h"
 #import "fitpolo705LogManager.h"
-#import "fitpolo705ScanModel.h"
+
+static NSString * const fitpolo705CustomErrorDomain = @"com.moko.fitpoloBluetoothSDK";
 
 static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
 
 @implementation fitpolo705Parser
+
+#pragma mark - blocks
++ (NSError *)getErrorWithCode:(fitpolo705CustomErrorCode)code message:(NSString *)message{
+    NSError *error = [[NSError alloc] initWithDomain:fitpolo705CustomErrorDomain
+                                                code:code
+                                            userInfo:@{@"errorInfo":message}];
+    return error;
+}
+
++ (void)operationCentralBlePowerOffBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705BlueDisable message:@"mobile phone bluetooth is currently unavailable"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationConnectFailedBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705ConnectedFailed message:@"connect failed"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationDisconnectedErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705PeripheralDisconnected message:@"the current connection device is in disconnect"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationCharacteristicErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705CharacteristicError message:@"characteristic error"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationRequestDataErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705RequestPeripheralDataError message:@"request bracelet data error"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationParamsErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705ParamsError message:@"input parameter error"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationSetParamsErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705SetParamsError message:@"set parameter error"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationGetPackageDataErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705GetPackageError message:@"get package error"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationUpdateErrorBlock:(void (^)(NSError *error))block{
+    fitpolo705_main_safe(^{
+        if (block) {
+            NSError *error = [self getErrorWithCode:fitpolo705UpdateError message:@"update failed"];
+            block(error);
+        }
+    });
+}
+
++ (void)operationSetParamsResult:(id)returnData
+                        sucBlock:(void (^)(id returnData))sucBlock
+                     failedBlock:(void (^)(NSError *error))failedBlock{
+    if (!fitpolo705ValidDict(returnData)) {
+        [self operationSetParamsErrorBlock:failedBlock];
+        return;
+    }
+    BOOL resultStatus = [returnData[@"result"][@"result"] boolValue];
+    if (!resultStatus) {
+        [self operationSetParamsErrorBlock:failedBlock];
+        return ;
+    }
+    NSDictionary *resultDic = @{@"msg":@"success",
+                                @"code":@"1",
+                                @"result":@{},
+                                };
+    fitpolo705_main_safe(^{
+        if (sucBlock) {
+            sucBlock(resultDic);
+        }
+    });
+}
+
+#pragma mark - parser
 + (NSInteger)getDecimalWithHex:(NSString *)content range:(NSRange)range{
     if (!fitpolo705ValidStr(content)) {
         return 0;
@@ -88,77 +201,6 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
     Byte arrayCrc[] = {crcH, crcL};
     NSData *dataCrc = [NSData dataWithBytes:arrayCrc length:sizeof(arrayCrc)];
     return dataCrc;
-}
-
-+ (NSString *)getAncsCommand:(fitpolo705AncsModel *)ancsModel{
-    //短信、电话、微信、qq、whatsapp、facebook、twitter、skype、snapchat、Line
-    unsigned long lowByte = 0;
-    unsigned long highByte = 0;
-    if (ancsModel.openSMS) lowByte |= 0x01;
-    if (ancsModel.openPhone) lowByte |= 0x02;
-    if (ancsModel.openWeChat) lowByte |= 0x04;
-    if (ancsModel.openQQ) lowByte |= 0x08;
-    if (ancsModel.openWhatsapp) lowByte |= 0x10;
-    if (ancsModel.openFacebook) lowByte |= 0x20;
-    if (ancsModel.openTwitter) lowByte |= 0x40;
-    if (ancsModel.openSkype) lowByte |= 0x80;
-    if (ancsModel.openSnapchat) highByte |= 0x01;
-    if (ancsModel.openLine) highByte |= 0x02;
-    NSString *lowString = [[NSString alloc] initWithFormat:@"%1lx",lowByte];
-    if (lowString.length == 1) {
-        lowString = [@"0" stringByAppendingString:lowString];
-    }
-    NSString *highString = [[NSString alloc] initWithFormat:@"%1lx",highByte];
-    if (highString.length == 1) {
-        highString = [@"0" stringByAppendingString:highString];
-    }
-    return [highString stringByAppendingString:lowString];
-}
-
-+ (NSString *)getAlarmClockType:(fitpolo705AlarmClockType)clockType{
-    switch (clockType) {
-        case fitpolo705AlarmClockMedicine:
-            return @"00";
-        case fitpolo705AlarmClockDrink:
-            return @"01";
-        case fitpolo705AlarmClockSleep:
-            return @"04";
-        case fitpolo705AlarmClockExcise:
-            return @"05";
-        case fitpolo705AlarmClockSport:
-            return @"06";
-        case fitpolo705AlarmClockNormal:
-            return @"03";
-    }
-}
-+ (NSString *)getAlarlClockSetInfo:(fitpolo705StatusModel *)statusModel isOn:(BOOL)isOn{
-    unsigned long byte = 0;
-    if (statusModel.mondayIsOn) byte |= 0x01;
-    if (statusModel.tuesdayIsOn) byte |= 0x02;
-    if (statusModel.wednesdayIsOn) byte |= 0x04;
-    if (statusModel.thursdayIsOn) byte |= 0x08;
-    if (statusModel.fridayIsOn) byte |= 0x10;
-    if (statusModel.saturdayIsOn) byte |= 0x20;
-    if (statusModel.sundayIsOn) byte |= 0x40;
-    if (isOn) byte |= 0x80;
-    NSString *byteHexString = [NSString stringWithFormat:@"%1lx",byte];
-    if (byteHexString.length == 1) {
-        byteHexString = [@"0" stringByAppendingString:byteHexString];
-    }
-    return byteHexString;
-}
-
-+ (NSString *)getHeartRateAcquisitionInterval:(fitpolo705HeartRateAcquisitionInterval)intervalType{
-    switch (intervalType) {
-        case fitpolo705HeartRateAcquisitionIntervalClose:
-            return @"00";
-        case fitpolo705HeartRateAcquisitionInterval10Min:
-            return @"01";
-        case fitpolo705HeartRateAcquisitionInterval20Min:
-            return @"02";
-        case fitpolo705HeartRateAcquisitionInterval30Min:
-            return @"03";
-    }
 }
 
 + (NSString *)hexStringFromData:(NSData *)sourceData{
@@ -238,6 +280,19 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
                                                        options:kNilOptions
                                                          range:NSMakeRange(0, uuid.length)];
     return (numberOfMatches > 0);
+}
+
++ (BOOL)checkIdenty:(NSString *)identy{
+    if ([self isMacAddressLowFour:identy]) {
+        return YES;
+    }
+    if ([self isUUIDString:identy]) {
+        return YES;
+    }
+    if ([self isMacAddress:identy]) {
+        return YES;
+    }
+    return NO;
 }
 
 + (NSData *)stringToData:(NSString *)dataString{
@@ -323,32 +378,10 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
     for (NSInteger i = 0; i < content.length / 8; i ++) {
         NSString *subContent = [content substringWithRange:NSMakeRange(i * 8, 8)];
         fitpolo705AlarmClockModel *clockModel = [[fitpolo705AlarmClockModel alloc] init];
-        clockModel.clockType = [self getClockTypeWithString:[subContent substringWithRange:NSMakeRange(0, 2)]];
-        NSDictionary *dic = [self getClockStatusModelWithString:[subContent substringWithRange:NSMakeRange(2, 2)]];
-        clockModel.statusModel = dic[@"statusModel"];
-        clockModel.isOn = [dic[@"isOn"] boolValue];
-        clockModel.hour = [self getDecimalWithHex:subContent range:NSMakeRange(4, 2)];
-        clockModel.minutes = [self getDecimalWithHex:subContent range:NSMakeRange(6, 2)];
+        [clockModel updateAlarmClockModel:subContent];
         [list addObject:clockModel];
     }
     return [list mutableCopy];
-}
-//bit0为短信，bit1为电话，bit2为微信bit3为QQ，bit4为whatsapp，bit5为facebook，bit6 为twitter，bit7为 skype，bit 8 为snapchat，bit 9 为Line
-+ (fitpolo705AncsModel *)getAncsOptionsModel:(NSString *)content{
-    NSInteger statusValueHeight = [self getDecimalWithHex:content range:NSMakeRange(0, 2)];
-    NSInteger statusValueLow = [self getDecimalWithHex:content range:NSMakeRange(2, 2)];
-    fitpolo705AncsModel *ancsModel = [[fitpolo705AncsModel alloc] init];
-    ancsModel.openSMS = (statusValueLow & 0x01);
-    ancsModel.openPhone = (statusValueLow & 0x02);
-    ancsModel.openWeChat = (statusValueLow & 0x04);
-    ancsModel.openQQ = (statusValueLow & 0x08);
-    ancsModel.openWhatsapp = (statusValueLow & 0x10);
-    ancsModel.openFacebook = (statusValueLow & 0x20);
-    ancsModel.openTwitter = (statusValueLow & 0x40);
-    ancsModel.openSkype = (statusValueLow & 0x80);
-    ancsModel.openSnapchat = (statusValueHeight & 0x01);
-    ancsModel.openLine = (statusValueHeight & 0x02);
-    return ancsModel;
 }
 
 + (NSDictionary *)getSedentaryRemindData:(NSString *)content{
@@ -364,21 +397,6 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
                 @"endHour":endHour,
                 @"endMin":endMin,
              };
-}
-//Bit13跑步4界面, （必须为真）,Bit12跑步3界面,Bit11跑步2界面,Bit10跑步1界面, （必须为真）,Bit9跑步入口界面,（必须为真）,Bit8睡眠界面,Bit7运动时间界面,Bit6里程界面,bit5卡路里界面,bit4 计步界面,bit3血压界面，（必须为假）,bit2心率界面，bit1时间界面，（必须为真）,bit0配对界面，（必须为真）
-+ (fitpolo705CustomScreenModel *)getCustomScreenModel:(NSString *)content{
-    NSInteger screenHeight = [self getDecimalWithHex:content range:NSMakeRange(0, 2)];
-    NSInteger screenLow = [self getDecimalWithHex:content range:NSMakeRange(2, 2)];
-    fitpolo705CustomScreenModel *screenModel = [[fitpolo705CustomScreenModel alloc] init];
-    screenModel.turnOnHeartRatePage = (screenLow & 0x04);
-    screenModel.turnOnStepPage = (screenLow & 0x10);
-    screenModel.turnOnCaloriesPage = (screenLow & 0x20);
-    screenModel.turnOnSportsDistancePage = (screenLow & 0x40);
-    screenModel.turnOnSportsTimePage = (screenLow & 0x80);
-    screenModel.turnOnSleepPage = (screenHeight & 0x01);
-    screenModel.turnOnSecondRunning = (screenHeight & 0x08);
-    screenModel.turnOnThirdRunning = (screenHeight & 0x10);
-    return screenModel;
 }
 
 + (NSDictionary *)getUserInfo:(NSString *)content{
@@ -403,7 +421,7 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
     return @{
                 @"weight":weight,
                 @"height":height,
-                @"birthOfDate":[NSString stringWithFormat:@"%@-%@-%@",yearString,month,day],
+                @"dateOfBirth":[NSString stringWithFormat:@"%@-%@-%@",yearString,month,day],
                 @"gender":gender,
                 @"stepDistance":stepDistance,
              };
@@ -430,9 +448,9 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
 }
 
 + (NSString *)getFirmwareVersion:(NSString *)content{
-    NSString *hardVersion = [self getDecimalStringWithHex:content range:NSMakeRange(0, 4)];
-    NSString *function = [self getDecimalStringWithHex:content range:NSMakeRange(4, 4)];
-    NSString *softVersion = [self getDecimalStringWithHex:content range:NSMakeRange(8, 4)];
+    NSString *hardVersion = [content substringWithRange:NSMakeRange(0, 4)];
+    NSString *function = [content substringWithRange:NSMakeRange(4, 4)];
+    NSString *softVersion = [content substringWithRange:NSMakeRange(8, 4)];
     return [NSString stringWithFormat:@"%@.%@.%@",hardVersion,function,softVersion];
 }
 
@@ -556,34 +574,6 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
     return sportDate;
 }
 
-//Bit13跑步4界面, （必须为真）,Bit12跑步3界面,Bit11跑步2界面,Bit10跑步1界面, （必须为真）,Bit9跑步入口界面,（必须为真）,Bit8睡眠界面,Bit7运动时间界面,Bit6里程界面,bit5卡路里界面,bit4 计步界面,bit3血压界面，（必须为假）,bit2心率界面，bit1时间界面，（必须为真）,bit0配对界面，（必须为真）
-+ (NSString *)getCustomScreenString:(fitpolo705CustomScreenModel *)screenModel{
-    unsigned long highByte = 0;
-    unsigned long lowByte = 1;
-    lowByte |= 0x03;
-    if (screenModel.turnOnHeartRatePage) lowByte |= 0x04;
-    lowByte |= 0x08;
-    if (screenModel.turnOnStepPage) lowByte |= 0x10;
-    if (screenModel.turnOnCaloriesPage) lowByte |= 0x20;
-    if (screenModel.turnOnSportsDistancePage) lowByte |= 0x40;
-    if (screenModel.turnOnSportsTimePage) lowByte |= 0x80;
-    
-    if (screenModel.turnOnSleepPage) highByte |= 0x01;
-    highByte |= 0x06;
-    if (screenModel.turnOnSecondRunning) highByte |= 0x08;
-    if (screenModel.turnOnThirdRunning) highByte |= 0x10;
-    highByte |= 0x20;
-    NSString *highHex = [NSString stringWithFormat:@"%1lx",highByte];
-    if (highHex.length == 1) {
-        highHex = [@"0" stringByAppendingString:highHex];
-    }
-    NSString *lowHex = [NSString stringWithFormat:@"%1lx",lowByte];
-    if (lowHex.length == 1) {
-        lowHex = [@"0" stringByAppendingString:lowHex];
-    }
-    return [highHex stringByAppendingString:lowHex];
-}
-
 + (NSString *)getTimeSpaceWithStatus:(BOOL)isOn
                            startHour:(NSInteger)startHour
                         startMinutes:(NSInteger)startMinutes
@@ -656,6 +646,25 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
              };
 }
 
+/**
+ 监听状态下手环返回的实时计步数据
+
+ @param content 手环原始数据
+ @return @{}
+ */
++ (NSDictionary *)getListeningStateStepData:(NSString *)content{
+    NSString *stepNumber = [self getDecimalStringWithHex:content range:NSMakeRange(0, 8)];
+    NSString *activityTime = [self getDecimalStringWithHex:content range:NSMakeRange(8, 4)];
+    NSString *distance = [NSString stringWithFormat:@"%.1f",(float)[self getDecimalWithHex:content range:NSMakeRange(12, 4)] / 10.0];
+    NSString *calories = [self getDecimalStringWithHex:content range:NSMakeRange(16, 4)];
+    return @{
+             @"stepNumber":stepNumber,
+             @"activityTime":activityTime,
+             @"distance":distance,
+             @"calories":calories,
+             };
+}
+
 //解析心率数据，并记录到本地
 + (NSDictionary *)getHeartRateList:(NSString *)content{
     NSMutableArray *list = [NSMutableArray array];
@@ -688,28 +697,6 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
              };
 }
 
-+ (fitpolo705ScanModel *)getScanModelWithParamDic:(NSDictionary *)paramDic peripheral:(CBPeripheral *)peripheral{
-    if (!paramDic || paramDic.allValues.count == 0 || !peripheral) {
-        return nil;
-    }
-    NSData *data = paramDic[CBAdvertisementDataManufacturerDataKey];
-    if (data.length != 9) {
-        return nil;
-    }
-    NSString *temp = data.description;
-    temp = [temp stringByReplacingOccurrencesOfString:@" " withString:@""];
-    temp = [temp stringByReplacingOccurrencesOfString:@"<" withString:@""];
-    temp = [temp stringByReplacingOccurrencesOfString:@">" withString:@""];
-    NSString *macAddress = [NSString stringWithFormat:@"%@-%@-%@-%@-%@-%@",[temp substringWithRange:NSMakeRange(0, 2)],[temp substringWithRange:NSMakeRange(2, 2)],[temp substringWithRange:NSMakeRange(4, 2)],[temp substringWithRange:NSMakeRange(6, 2)],[temp substringWithRange:NSMakeRange(8, 2)],[temp substringWithRange:NSMakeRange(10, 2)]];
-    NSString *deviceType = [temp substringWithRange:NSMakeRange(12, 2)];
-    fitpolo705ScanModel *model = [[fitpolo705ScanModel alloc] init];
-    model.peripheral = peripheral;
-    model.macAddress = macAddress;
-    model.peripheralName = paramDic[CBAdvertisementDataLocalNameKey];
-    model.typeIdenty = deviceType;
-    return model;
-}
-
 #pragma mark - Private method
 + (NSArray *)getDetailSleepList:(NSString *)SN recordList:(NSArray *)recordList{
     NSMutableArray * tempList = [[NSMutableArray alloc] init];
@@ -735,124 +722,6 @@ static NSString *const uuidPatternString = @"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
     }
     
     return resultList;
-}
-
-//0x00:吃药;0x01:喝水;0x03:普通;0x04:睡觉;0x05:锻炼;0x06:跑步
-+ (fitpolo705AlarmClockType)getClockTypeWithString:(NSString *)type{
-    if ([type isEqualToString:@"00"]) {
-        return fitpolo705AlarmClockMedicine;
-    }else if ([type isEqualToString:@"01"]){
-        return fitpolo705AlarmClockDrink;
-    }else if ([type isEqualToString:@"03"]){
-        return fitpolo705AlarmClockNormal;
-    }else if ([type isEqualToString:@"04"]){
-        return fitpolo705AlarmClockSleep;
-    }else if ([type isEqualToString:@"05"]){
-        return fitpolo705AlarmClockExcise;
-    }else if ([type isEqualToString:@"06"]){
-        return fitpolo705AlarmClockSport;
-    }
-    return fitpolo705AlarmClockNormal;
-}
-//Bit0-Bit6：代表周一至周日，为真代表打开 Bit7：1代表打开闹钟，0代表关闭闹钟
-+ (NSDictionary *)getClockStatusModelWithString:(NSString *)modelString{
-    NSInteger statusValue = [self getDecimalWithHex:modelString range:NSMakeRange(0, 2)];
-    fitpolo705StatusModel *statusModel = [[fitpolo705StatusModel alloc] init];
-    statusModel.mondayIsOn = (statusValue & 0x01);
-    statusModel.tuesdayIsOn = (statusValue & 0x02);
-    statusModel.wednesdayIsOn = (statusValue & 0x04);
-    statusModel.thursdayIsOn = (statusValue & 0x08);
-    statusModel.fridayIsOn = (statusValue & 0x10);
-    statusModel.saturdayIsOn = (statusValue & 0x20);
-    statusModel.sundayIsOn = (statusValue & 0x40);
-    
-    return @{
-                @"statusModel":statusModel,
-                @"isOn":@(statusValue & 0x80),
-             };
-}
-
-+ (NSString *)getCommandType:(fitpolo705TaskOperationID)operationID{
-    switch (operationID) {
-        case fitpolo705GetAlarmClockOperation:
-            return @"读取手环闹钟数据";
-        case fitpolo705GetAncsOptionsOperation:
-            return @"读取手环ancs选项";
-        case fitpolo705GetSedentaryRemindOperation:
-            return @"读取手环久坐提醒数据";
-        case fitpolo705GetMovingTargetOperation:
-            return @"读取手环运动目标值";
-        case fitpolo705GetUnitDataOperation:
-            return @"读取手环单位信息";
-        case fitpolo705GetTimeFormatDataOperation:
-            return @"读取手环时间进制";
-        case fitpolo705GetCustomScreenDisplayOperation:
-            return @"读取手环屏幕显示";
-        case fitpolo705GetRemindLastScreenDisplayOperation:
-            return @"读取是否显示上一次屏幕";
-        case fitpolo705GetHeartRateAcquisitionIntervalOperation:
-            return @"读取心率采集间隔";
-        case fitpolo705GetDoNotDisturbTimeOperation:
-            return @"读取勿扰时段";
-        case fitpolo705GetPalmingBrightScreenOperation:
-            return @"读取翻腕亮屏信息";
-        case fitpolo705GetUserInfoOperation:
-            return @"读取个人信息";
-        case fitpolo705GetSportsDataOperation:
-            return @"读取运动信息";
-        case fitpolo705GetLastChargingTimeOperation:
-            return @"读取上一次手环充电时间";
-        case fitpolo705GetBatteryOperation:
-            return @"读取手环电池电量";
-        case fitpolo705VibrationOperation:
-            return @"手环震动";
-        case fitpolo705SetUnitOperation:
-            return @"设置单位信息";
-        case fitpolo705SetANCSOptionsOperation:
-            return @"设置ancs通知选项";
-        case fitpolo705SetDateOperation:
-            return @"设置日期";
-        case fitpolo705SetUserInfoOperation:
-            return @"设置个人信息";
-        case fitpolo705SetTimeFormatOperation:
-            return @"设置时间进制格式";
-        case fitpolo705OpenPalmingBrightScreenOperation:
-            return @"设置翻腕亮屏";
-        case fitpolo705SetAlarmClockOperation:
-            return @"设置闹钟";
-        case fitpolo705RemindLastScreenDisplayOperation:
-            return @"设置上一次屏幕显示";
-        case fitpolo705SetSedentaryRemindOperation:
-            return @"设置久坐提醒";
-        case fitpolo705SetHeartRateAcquisitionIntervalOperation:
-            return @"设置心率采集间隔";
-        case fitpolo705SetScreenDisplayOperation:
-            return @"设置屏幕显示";
-        case fitpolo705GetHardwareParametersOperation:
-            return @"获取硬件参数";
-        case fitpolo705GetFirmwareVersionOperation:
-            return @"获取固件版本号";
-        case fitpolo705GetStepDataOperation:
-            return @"获取计步数据";
-        case fitpolo705GetSleepIndexOperation:
-            return @"获取睡眠index数据";
-        case fitpolo705GetSleepRecordOperation:
-            return @"获取睡眠record数据";
-        case fitpolo705GetHeartDataOperation:
-            return @"获取心率数据";
-        case fitpolo705StartUpdateOperation:
-            return @"开启手环升级";
-        case fitpolo705SetMovingTargetOperation:
-            return @"设置运动目标";
-        case fitpolo705SetDoNotDisturbTimeOperation:
-            return @"设置勿扰时段";
-        case fitpolo705GetSportHeartDataOperation:
-            return @"获取运动心率数据";
-        case fitpolo705SetAlarmClockNumbersOperation:
-            return @"设置闹钟组数";
-        case fitpolo705GetANCSConnectStatusOperation:
-            return @"获取手环ancs连接状态";
-    }
 }
 
 @end

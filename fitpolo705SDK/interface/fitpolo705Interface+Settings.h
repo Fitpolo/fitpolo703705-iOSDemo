@@ -7,10 +7,25 @@
 //
 
 #import "fitpolo705Interface.h"
+#import "fitpolo705Models.h"
 
-@class fitpolo705AlarmClockModel;
-@class fitpolo705CustomScreenModel;
-@class fitpolo705AncsModel;
+typedef NS_ENUM(NSInteger, fitpolo705Unit) {
+    fitpolo705MetricSystem,         //公制
+    fitpolo705Imperial,             //英制
+};
+typedef NS_ENUM(NSInteger, fitpolo705Gender) {
+    fitpolo705Male,             //男性
+    fitpolo705Female,           //女性
+};
+typedef NS_ENUM(NSInteger, fitpolo705TimeFormat) {
+    fitpolo70524Hour,         //24小时制
+    fitpolo70512Hour,         //12小时制
+};
+typedef NS_ENUM(NSInteger, fitpolo705DialStyle) {
+    fitpolo705DialStyle1,
+    fitpolo705DialStyle2,
+    fitpolo705DialStyle3,
+};
 @interface fitpolo705Interface (Settings)
 
 /**
@@ -174,6 +189,16 @@
 + (void)setDate:(NSDate *)date
        sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
       failBlock:(fitpolo705CommunicationFailedBlock)failedBlock;
+/**
+ 设置设备表盘样式
+ 
+ @param dialStyle 表盘样式
+ @param successBlock 成功回调
+ @param failedBlock 失败回调
+ */
++ (void)setDialStyle:(fitpolo705DialStyle)dialStyle
+            sucBlock:(fitpolo705CommunicationSuccessBlock)successBlock
+           failBlock:(fitpolo705CommunicationFailedBlock)failedBlock;
 /**
  手环震动指令
  

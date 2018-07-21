@@ -12,18 +12,8 @@
 
 extern NSString *const fitpolo705CommunicationDataNum;
 
-@interface fitpolo705ParseResultModel : NSObject
-
-@property (nonatomic, assign)fitpolo705TaskOperationID operationID;
-
-@property (nonatomic, strong)id returnData;
-
-@end
-
 @interface fitpolo705DataParser : NSObject
 
-@property (nonatomic, strong)NSMutableArray *dataList;
-
-- (void)parseReadDataFromCharacteristic:(CBCharacteristic *)characteristic;
++ (NSDictionary *)parseReadDataFromCharacteristic:(CBCharacteristic *)characteristic;
 
 @end
