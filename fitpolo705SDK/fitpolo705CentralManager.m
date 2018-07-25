@@ -444,6 +444,7 @@ NSString *const fitpolo705PeripheralUpdateResultNotification = @"fitpolo705Perip
     self.connectedPeripheral = nil;
     self.managerAction = currentManagerActionDefault;
     [self.operationQueue cancelAllOperations];
+    [self updateManagerStateConnectState:fitpolo705ConnectStatusDisconnect];
 }
 
 #pragma mark - task
