@@ -74,7 +74,7 @@ typedef void(^fitpolo705CommunicationFailedBlock)(NSError *error);
 
  @param centralManager 中心
  */
-- (void)centralManagerStartScan:(fitpolo705CentralManager *)centralManager;
+- (void)fitpolo705CentralStartScan:(fitpolo705CentralManager *)centralManager;
 /**
  扫描到新的设备
 
@@ -83,16 +83,16 @@ typedef void(^fitpolo705CommunicationFailedBlock)(NSError *error);
  @param peripheralName 设备的名称
  @param centralManager 中心
  */
-- (void)centralManagerScanningNewPeripheral:(CBPeripheral *)peripheral
-                                 macAddress:(NSString *)macAddress
-                             peripheralName:(NSString *)peripheralName
-                             centralManager:(fitpolo705CentralManager *)centralManager;
+- (void)fitpolo705CentralScanningNewPeripheral:(CBPeripheral *)peripheral
+                                    macAddress:(NSString *)macAddress
+                                peripheralName:(NSString *)peripheralName
+                                centralManager:(fitpolo705CentralManager *)centralManager;
 /**
  中心停止扫描
 
  @param centralManager 中心
  */
-- (void)centralManagerStopScan:(fitpolo705CentralManager *)centralManager;
+- (void)fitpolo705CentralStopScan:(fitpolo705CentralManager *)centralManager;
 
 @end
 
@@ -104,7 +104,7 @@ typedef void(^fitpolo705CommunicationFailedBlock)(NSError *error);
  @param managerState 中心蓝牙状态
  @param manager 中心
  */
-- (void)centralManagerStateChanged:(fitpolo705CentralManagerState)managerState manager:(fitpolo705CentralManager *)manager;
+- (void)fitpolo705CentralStateChanged:(fitpolo705CentralManagerState)managerState manager:(fitpolo705CentralManager *)manager;
 
 /**
  中心与外设连接状态改变
@@ -112,7 +112,7 @@ typedef void(^fitpolo705CommunicationFailedBlock)(NSError *error);
  @param connectState 外设连接状态
  @param manager 中心
  */
-- (void)centralManagerConnectStateChanged:(fitpolo705ConnectStatus)connectState manager:(fitpolo705CentralManager *)manager;
+- (void)fitpolo705PeripheralConnectStateChanged:(fitpolo705ConnectStatus)connectState manager:(fitpolo705CentralManager *)manager;
 
 @end
 
@@ -141,12 +141,17 @@ typedef void(^fitpolo705CommunicationFailedBlock)(NSError *error);
  */
 @property (nonatomic, assign, readonly)fitpolo705ConnectStatus connectStatus;
 
+/**
+ 当前蓝牙状态
+ */
+@property (nonatomic, assign, readonly)fitpolo705CentralManagerState centralStatus;
+
 + (fitpolo705CentralManager *)sharedInstance;
 
 /**
  销毁单例
  */
-+ (void)attempDealloc;
++ (void)singletonDestroyed;
 
 /**
  开始扫描设备

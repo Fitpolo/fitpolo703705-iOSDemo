@@ -1,12 +1,12 @@
 //
-//  CBPeripheral+Characteristic.m
+//  CBPeripheral+fitpolo705Characteristic.m
 //  fitpolo705SDKDemo
 //
 //  Created by aa on 2018/7/19.
 //  Copyright © 2018年 HCK. All rights reserved.
 //
 
-#import "CBPeripheral+Characteristic.h"
+#import "CBPeripheral+fitpolo705Characteristic.h"
 #import <objc/runtime.h>
 
 #pragma mark -
@@ -17,9 +17,9 @@ static const char *heartRateCharacteristic = "heartRateCharacteristic";
 static const char *updateWriteCharacteristic = "updateWriteCharacteristic";
 static const char *updateNotifyCharacteristic = "updateNotifyCharacteristic";
 
-@implementation CBPeripheral (Characteristic)
+@implementation CBPeripheral (fitpolo705Characteristic)
 
-- (void)updateCharacteristicsForService:(CBService *)service{
+- (void)update705CharacteristicsForService:(CBService *)service{
     if ([service.UUID isEqual:[CBUUID UUIDWithString:normalServiceUUID]]) {
         for (CBCharacteristic *characteristic in [service.characteristics mutableCopy]) {
             [self setNotifyValue:YES forCharacteristic:characteristic];
@@ -48,7 +48,7 @@ static const char *updateNotifyCharacteristic = "updateNotifyCharacteristic";
     }
 }
 
-- (BOOL)connectSuccess{
+- (BOOL)fitpolo705ConnectSuccess{
     if (!self.readData) {
         return NO;
     }

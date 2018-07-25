@@ -36,7 +36,7 @@ static NSString *const updateWriteUUID = @"FFC1";
 
 static NSString *const updateNotifyUUID = @"FFC2";
 
-@interface CBPeripheral (Characteristic)
+@interface CBPeripheral (fitpolo705Characteristic)
 
 @property (nonatomic, strong, readonly)CBCharacteristic *readData;
 
@@ -50,7 +50,7 @@ static NSString *const updateNotifyUUID = @"FFC2";
 
 @property (nonatomic, strong, readonly)CBCharacteristic *updateNotify;
 
-- (void)updateCharacteristicsForService:(CBService *)service;
-- (BOOL)connectSuccess;
+- (void)update705CharacteristicsForService:(CBService *)service;
+- (BOOL)fitpolo705ConnectSuccess;
 
 @end

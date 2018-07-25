@@ -61,24 +61,24 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
 }
 
 #pragma mark - fitpolo705ScanPeripheralDelegate
-- (void)centralManagerStartScan:(fitpolo705CentralManager *)centralManager{
-    NSLog(@"开始扫描");
+- (void)fitpolo705CentralStartScan:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"start scan");
 }
 
-- (void)centralManagerScanningNewPeripheral:(CBPeripheral *)peripheral macAddress:(NSString *)macAddress peripheralName:(NSString *)peripheralName centralManager:(fitpolo705CentralManager *)centralManager{
-    NSLog(@"扫描到的设备:%@===%@====%@",peripheral.identifier.UUIDString,macAddress,peripheralName);
+- (void)fitpolo705CentralScanningNewPeripheral:(CBPeripheral *)peripheral macAddress:(NSString *)macAddress peripheralName:(NSString *)peripheralName centralManager:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"scan new peripheral:%@===%@====%@",peripheral.identifier.UUIDString,macAddress,peripheralName);
 }
 
-- (void)centralManagerStopScan:(fitpolo705CentralManager *)centralManager{
-    NSLog(@"停止扫描");
+- (void)fitpolo705CentralStopScan:(fitpolo705CentralManager *)centralManager{
+    NSLog(@"stop scan");
 }
 
 #pragma mark - fitpolo705CentralManagerStateDelegate
-- (void)centralManagerStateChanged:(fitpolo705CentralManagerState)managerState manager:(fitpolo705CentralManager *)manager{
+- (void)fitpolo705CentralStateChanged:(fitpolo705CentralManagerState)managerState manager:(fitpolo705CentralManager *)manager{
     NSLog(@"中心蓝牙状态发生改变");
 }
 
-- (void)centralManagerConnectStateChanged:(fitpolo705ConnectStatus)connectState manager:(fitpolo705CentralManager *)manager{
+- (void)fitpolo705PeripheralConnectStateChanged:(fitpolo705ConnectStatus)connectState manager:(fitpolo705CentralManager *)manager{
     NSLog(@"外设连接状态发生改变::::%@",@(connectState));
 }
 
@@ -388,7 +388,7 @@ static NSString *const mainCellIdenty = @"mainCellIdenty";
         }];
     }else if (row == self.dataList.count - 1){
         self.updateManager = nil;
-        [fitpolo705CentralManager attempDealloc];
+        [fitpolo705CentralManager singletonDestroyed];
     }
 }
 

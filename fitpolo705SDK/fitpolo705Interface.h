@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "fitpolo705CentralManager.h"
-#import "CBPeripheral+Characteristic.h"
+#import "CBPeripheral+fitpolo705Characteristic.h"
 
 @interface fitpolo705Interface : NSObject
 

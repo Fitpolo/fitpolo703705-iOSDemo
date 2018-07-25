@@ -7,7 +7,6 @@
 //
 
 #import "fitpolo705TaskOperation.h"
-#import <CoreBluetooth/CoreBluetooth.h>
 #import "fitpolo705Defines.h"
 #import "fitpolo705DataParser.h"
 
@@ -45,9 +44,9 @@ NSString *const fitpolo705DataStatusLev = @"fitpolo705DataStatusLev";
 /**
  线程结束时候的回调
  */
-@property (nonatomic, copy)communicationCompleteBlock completeBlock;
+@property (nonatomic, copy)void (^completeBlock) (NSError *error, fitpolo705TaskOperationID operationID, id returnData);
 
-@property (nonatomic, copy)communicationCommandBlock commandBlock;
+@property (nonatomic, copy)void (^commandBlock)(void);
 
 @property (nonatomic, strong)NSMutableArray *dataList;
 
@@ -104,8 +103,8 @@ NSString *const fitpolo705DataStatusLev = @"fitpolo705DataStatusLev";
  */
 - (instancetype)initOperationWithID:(fitpolo705TaskOperationID)operationID
                            resetNum:(BOOL)resetNum
-                       commandBlock:(communicationCommandBlock)commandBlock
-                      completeBlock:(communicationCompleteBlock)completeBlock{
+                       commandBlock:(void (^)(void))commandBlock
+                      completeBlock:(void (^)(NSError *error, fitpolo705TaskOperationID operationID, id returnData))completeBlock{
     if (self = [super init]) {
         _executing = NO;
         _finished = NO;

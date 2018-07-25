@@ -7,26 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0012563D21082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562321082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m */; };
+		0012563E21082D3200E4BC6A /* fitpolo705CentralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562521082D3200E4BC6A /* fitpolo705CentralManager.m */; };
+		0012563F21082D3200E4BC6A /* fitpolo705DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562721082D3200E4BC6A /* fitpolo705DataParser.m */; };
+		0012564021082D3200E4BC6A /* fitpolo705Interface+HeartRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562A21082D3200E4BC6A /* fitpolo705Interface+HeartRate.m */; };
+		0012564121082D3200E4BC6A /* fitpolo705Interface+Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562C21082D3200E4BC6A /* fitpolo705Interface+Settings.m */; };
+		0012564221082D3200E4BC6A /* fitpolo705Interface+StepGauge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562E21082D3200E4BC6A /* fitpolo705Interface+StepGauge.m */; };
+		0012564321082D3200E4BC6A /* fitpolo705Interface.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563021082D3200E4BC6A /* fitpolo705Interface.m */; };
+		0012564421082D3200E4BC6A /* fitpolo705LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563221082D3200E4BC6A /* fitpolo705LogManager.m */; };
+		0012564521082D3200E4BC6A /* fitpolo705Models.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563421082D3200E4BC6A /* fitpolo705Models.m */; };
+		0012564621082D3200E4BC6A /* fitpolo705Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563621082D3200E4BC6A /* fitpolo705Parser.m */; };
+		0012564721082D3200E4BC6A /* fitpolo705TaskOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563A21082D3200E4BC6A /* fitpolo705TaskOperation.m */; };
+		0012564821082D3200E4BC6A /* fitpolo705UpgradeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012563C21082D3200E4BC6A /* fitpolo705UpgradeManager.m */; };
 		003C3BAA20A2EFC600D0EF40 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 003C3BA920A2EFC600D0EF40 /* AppDelegate.m */; };
 		003C3BB220A2EFC600D0EF40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 003C3BB120A2EFC600D0EF40 /* Assets.xcassets */; };
 		003C3BB820A2EFC600D0EF40 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 003C3BB720A2EFC600D0EF40 /* main.m */; };
 		003C3C0820A2F03300D0EF40 /* HCKMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003C3BF520A2F03300D0EF40 /* HCKMainViewController.m */; };
-		0055B7802101CD6400F7DECC /* fitpolo705Models.m in Sources */ = {isa = PBXBuildFile; fileRef = 0055B77F2101CD6400F7DECC /* fitpolo705Models.m */; };
 		0055B7822101D3B000F7DECC /* BORD_805_01.bin in Resources */ = {isa = PBXBuildFile; fileRef = 0055B7812101D3B000F7DECC /* BORD_805_01.bin */; };
-		008D0AF921002F460014AA14 /* fitpolo705CentralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0ACC21002F460014AA14 /* fitpolo705CentralManager.m */; };
-		008D0AFB21002F460014AA14 /* fitpolo705Interface+HeartRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AD221002F460014AA14 /* fitpolo705Interface+HeartRate.m */; };
-		008D0AFC21002F460014AA14 /* fitpolo705Interface+Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AD421002F460014AA14 /* fitpolo705Interface+Settings.m */; };
-		008D0AFD21002F460014AA14 /* fitpolo705Interface+StepGauge.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AD621002F460014AA14 /* fitpolo705Interface+StepGauge.m */; };
-		008D0AFE21002F460014AA14 /* fitpolo705Interface.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AD821002F460014AA14 /* fitpolo705Interface.m */; };
-		008D0AFF21002F460014AA14 /* fitpolo705LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0ADB21002F460014AA14 /* fitpolo705LogManager.m */; };
-		008D0B0621002F460014AA14 /* fitpolo705Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AEC21002F460014AA14 /* fitpolo705Parser.m */; };
-		008D0B0821002F460014AA14 /* fitpolo705DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AF221002F460014AA14 /* fitpolo705DataParser.m */; };
-		008D0B0921002F460014AA14 /* fitpolo705TaskOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AF521002F460014AA14 /* fitpolo705TaskOperation.m */; };
-		008D0B0A21002F460014AA14 /* fitpolo705UpgradeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0AF821002F460014AA14 /* fitpolo705UpgradeManager.m */; };
-		008D0B16210095860014AA14 /* CBPeripheral+Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 008D0B15210095860014AA14 /* CBPeripheral+Characteristic.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0012562221082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBPeripheral+fitpolo705Characteristic.h"; sourceTree = "<group>"; };
+		0012562321082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheral+fitpolo705Characteristic.m"; sourceTree = "<group>"; };
+		0012562421082D3200E4BC6A /* fitpolo705CentralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705CentralManager.h; sourceTree = "<group>"; };
+		0012562521082D3200E4BC6A /* fitpolo705CentralManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705CentralManager.m; sourceTree = "<group>"; };
+		0012562621082D3200E4BC6A /* fitpolo705DataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705DataParser.h; sourceTree = "<group>"; };
+		0012562721082D3200E4BC6A /* fitpolo705DataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705DataParser.m; sourceTree = "<group>"; };
+		0012562821082D3200E4BC6A /* fitpolo705Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Defines.h; sourceTree = "<group>"; };
+		0012562921082D3200E4BC6A /* fitpolo705Interface+HeartRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+HeartRate.h"; sourceTree = "<group>"; };
+		0012562A21082D3200E4BC6A /* fitpolo705Interface+HeartRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+HeartRate.m"; sourceTree = "<group>"; };
+		0012562B21082D3200E4BC6A /* fitpolo705Interface+Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+Settings.h"; sourceTree = "<group>"; };
+		0012562C21082D3200E4BC6A /* fitpolo705Interface+Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+Settings.m"; sourceTree = "<group>"; };
+		0012562D21082D3200E4BC6A /* fitpolo705Interface+StepGauge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+StepGauge.h"; sourceTree = "<group>"; };
+		0012562E21082D3200E4BC6A /* fitpolo705Interface+StepGauge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+StepGauge.m"; sourceTree = "<group>"; };
+		0012562F21082D3200E4BC6A /* fitpolo705Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Interface.h; sourceTree = "<group>"; };
+		0012563021082D3200E4BC6A /* fitpolo705Interface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Interface.m; sourceTree = "<group>"; };
+		0012563121082D3200E4BC6A /* fitpolo705LogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705LogManager.h; sourceTree = "<group>"; };
+		0012563221082D3200E4BC6A /* fitpolo705LogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705LogManager.m; sourceTree = "<group>"; };
+		0012563321082D3200E4BC6A /* fitpolo705Models.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Models.h; sourceTree = "<group>"; };
+		0012563421082D3200E4BC6A /* fitpolo705Models.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Models.m; sourceTree = "<group>"; };
+		0012563521082D3200E4BC6A /* fitpolo705Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Parser.h; sourceTree = "<group>"; };
+		0012563621082D3200E4BC6A /* fitpolo705Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Parser.m; sourceTree = "<group>"; };
+		0012563721082D3200E4BC6A /* fitpolo705SDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705SDK.h; sourceTree = "<group>"; };
+		0012563821082D3200E4BC6A /* fitpolo705TaskIDDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705TaskIDDefines.h; sourceTree = "<group>"; };
+		0012563921082D3200E4BC6A /* fitpolo705TaskOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705TaskOperation.h; sourceTree = "<group>"; };
+		0012563A21082D3200E4BC6A /* fitpolo705TaskOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705TaskOperation.m; sourceTree = "<group>"; };
+		0012563B21082D3200E4BC6A /* fitpolo705UpgradeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705UpgradeManager.h; sourceTree = "<group>"; };
+		0012563C21082D3200E4BC6A /* fitpolo705UpgradeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705UpgradeManager.m; sourceTree = "<group>"; };
 		003C3BA520A2EFC600D0EF40 /* fitpolo705SDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fitpolo705SDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		003C3BA820A2EFC600D0EF40 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		003C3BA920A2EFC600D0EF40 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -35,34 +62,7 @@
 		003C3BB720A2EFC600D0EF40 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		003C3BF420A2F03300D0EF40 /* HCKMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HCKMainViewController.h; sourceTree = "<group>"; };
 		003C3BF520A2F03300D0EF40 /* HCKMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HCKMainViewController.m; sourceTree = "<group>"; };
-		0055B77D2101CCC200F7DECC /* fitpolo705Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Defines.h; sourceTree = "<group>"; };
-		0055B77E2101CD6400F7DECC /* fitpolo705Models.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fitpolo705Models.h; sourceTree = "<group>"; };
-		0055B77F2101CD6400F7DECC /* fitpolo705Models.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Models.m; sourceTree = "<group>"; };
 		0055B7812101D3B000F7DECC /* BORD_805_01.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = BORD_805_01.bin; sourceTree = "<group>"; };
-		008D0ACB21002F460014AA14 /* fitpolo705CentralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705CentralManager.h; sourceTree = "<group>"; };
-		008D0ACC21002F460014AA14 /* fitpolo705CentralManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705CentralManager.m; sourceTree = "<group>"; };
-		008D0ACD21002F460014AA14 /* fitpolo705SDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705SDK.h; sourceTree = "<group>"; };
-		008D0AD121002F460014AA14 /* fitpolo705Interface+HeartRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+HeartRate.h"; sourceTree = "<group>"; };
-		008D0AD221002F460014AA14 /* fitpolo705Interface+HeartRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+HeartRate.m"; sourceTree = "<group>"; };
-		008D0AD321002F460014AA14 /* fitpolo705Interface+Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+Settings.h"; sourceTree = "<group>"; };
-		008D0AD421002F460014AA14 /* fitpolo705Interface+Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+Settings.m"; sourceTree = "<group>"; };
-		008D0AD521002F460014AA14 /* fitpolo705Interface+StepGauge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fitpolo705Interface+StepGauge.h"; sourceTree = "<group>"; };
-		008D0AD621002F460014AA14 /* fitpolo705Interface+StepGauge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fitpolo705Interface+StepGauge.m"; sourceTree = "<group>"; };
-		008D0AD721002F460014AA14 /* fitpolo705Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Interface.h; sourceTree = "<group>"; };
-		008D0AD821002F460014AA14 /* fitpolo705Interface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Interface.m; sourceTree = "<group>"; };
-		008D0ADA21002F460014AA14 /* fitpolo705LogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705LogManager.h; sourceTree = "<group>"; };
-		008D0ADB21002F460014AA14 /* fitpolo705LogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705LogManager.m; sourceTree = "<group>"; };
-		008D0AEB21002F460014AA14 /* fitpolo705Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705Parser.h; sourceTree = "<group>"; };
-		008D0AEC21002F460014AA14 /* fitpolo705Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705Parser.m; sourceTree = "<group>"; };
-		008D0AF121002F460014AA14 /* fitpolo705DataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705DataParser.h; sourceTree = "<group>"; };
-		008D0AF221002F460014AA14 /* fitpolo705DataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705DataParser.m; sourceTree = "<group>"; };
-		008D0AF321002F460014AA14 /* fitpolo705TaskIDDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705TaskIDDefines.h; sourceTree = "<group>"; };
-		008D0AF421002F460014AA14 /* fitpolo705TaskOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705TaskOperation.h; sourceTree = "<group>"; };
-		008D0AF521002F460014AA14 /* fitpolo705TaskOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705TaskOperation.m; sourceTree = "<group>"; };
-		008D0AF721002F460014AA14 /* fitpolo705UpgradeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705UpgradeManager.h; sourceTree = "<group>"; };
-		008D0AF821002F460014AA14 /* fitpolo705UpgradeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fitpolo705UpgradeManager.m; sourceTree = "<group>"; };
-		008D0B14210095860014AA14 /* CBPeripheral+Characteristic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CBPeripheral+Characteristic.h"; sourceTree = "<group>"; };
-		008D0B15210095860014AA14 /* CBPeripheral+Characteristic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheral+Characteristic.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,11 +76,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0012562121082D3200E4BC6A /* fitpolo705SDK */ = {
+			isa = PBXGroup;
+			children = (
+				0012562221082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.h */,
+				0012562321082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m */,
+				0012562421082D3200E4BC6A /* fitpolo705CentralManager.h */,
+				0012562521082D3200E4BC6A /* fitpolo705CentralManager.m */,
+				0012562621082D3200E4BC6A /* fitpolo705DataParser.h */,
+				0012562721082D3200E4BC6A /* fitpolo705DataParser.m */,
+				0012562821082D3200E4BC6A /* fitpolo705Defines.h */,
+				0012562921082D3200E4BC6A /* fitpolo705Interface+HeartRate.h */,
+				0012562A21082D3200E4BC6A /* fitpolo705Interface+HeartRate.m */,
+				0012562B21082D3200E4BC6A /* fitpolo705Interface+Settings.h */,
+				0012562C21082D3200E4BC6A /* fitpolo705Interface+Settings.m */,
+				0012562D21082D3200E4BC6A /* fitpolo705Interface+StepGauge.h */,
+				0012562E21082D3200E4BC6A /* fitpolo705Interface+StepGauge.m */,
+				0012562F21082D3200E4BC6A /* fitpolo705Interface.h */,
+				0012563021082D3200E4BC6A /* fitpolo705Interface.m */,
+				0012563121082D3200E4BC6A /* fitpolo705LogManager.h */,
+				0012563221082D3200E4BC6A /* fitpolo705LogManager.m */,
+				0012563321082D3200E4BC6A /* fitpolo705Models.h */,
+				0012563421082D3200E4BC6A /* fitpolo705Models.m */,
+				0012563521082D3200E4BC6A /* fitpolo705Parser.h */,
+				0012563621082D3200E4BC6A /* fitpolo705Parser.m */,
+				0012563721082D3200E4BC6A /* fitpolo705SDK.h */,
+				0012563821082D3200E4BC6A /* fitpolo705TaskIDDefines.h */,
+				0012563921082D3200E4BC6A /* fitpolo705TaskOperation.h */,
+				0012563A21082D3200E4BC6A /* fitpolo705TaskOperation.m */,
+				0012563B21082D3200E4BC6A /* fitpolo705UpgradeManager.h */,
+				0012563C21082D3200E4BC6A /* fitpolo705UpgradeManager.m */,
+			);
+			path = fitpolo705SDK;
+			sourceTree = "<group>";
+		};
 		003C3B9C20A2EFC600D0EF40 = {
 			isa = PBXGroup;
 			children = (
+				0012562121082D3200E4BC6A /* fitpolo705SDK */,
 				0055B7812101D3B000F7DECC /* BORD_805_01.bin */,
-				008D0AC421002F460014AA14 /* fitpolo705SDK */,
 				003C3BA720A2EFC600D0EF40 /* fitpolo705SDKDemo */,
 				003C3BA620A2EFC600D0EF40 /* Products */,
 			);
@@ -106,80 +140,6 @@
 				003C3BB720A2EFC600D0EF40 /* main.m */,
 			);
 			path = fitpolo705SDKDemo;
-			sourceTree = "<group>";
-		};
-		008D0AC421002F460014AA14 /* fitpolo705SDK */ = {
-			isa = PBXGroup;
-			children = (
-				0055B77D2101CCC200F7DECC /* fitpolo705Defines.h */,
-				008D0ACB21002F460014AA14 /* fitpolo705CentralManager.h */,
-				008D0ACC21002F460014AA14 /* fitpolo705CentralManager.m */,
-				008D0ACD21002F460014AA14 /* fitpolo705SDK.h */,
-				008D0ACE21002F460014AA14 /* interface */,
-				008D0AD921002F460014AA14 /* log */,
-				008D0AE821002F460014AA14 /* Parser */,
-				008D0AF021002F460014AA14 /* Tasks */,
-				008D0AF621002F460014AA14 /* Upgrade */,
-				008D0B14210095860014AA14 /* CBPeripheral+Characteristic.h */,
-				008D0B15210095860014AA14 /* CBPeripheral+Characteristic.m */,
-				0055B77E2101CD6400F7DECC /* fitpolo705Models.h */,
-				0055B77F2101CD6400F7DECC /* fitpolo705Models.m */,
-			);
-			path = fitpolo705SDK;
-			sourceTree = "<group>";
-		};
-		008D0ACE21002F460014AA14 /* interface */ = {
-			isa = PBXGroup;
-			children = (
-				008D0AD121002F460014AA14 /* fitpolo705Interface+HeartRate.h */,
-				008D0AD221002F460014AA14 /* fitpolo705Interface+HeartRate.m */,
-				008D0AD321002F460014AA14 /* fitpolo705Interface+Settings.h */,
-				008D0AD421002F460014AA14 /* fitpolo705Interface+Settings.m */,
-				008D0AD521002F460014AA14 /* fitpolo705Interface+StepGauge.h */,
-				008D0AD621002F460014AA14 /* fitpolo705Interface+StepGauge.m */,
-				008D0AD721002F460014AA14 /* fitpolo705Interface.h */,
-				008D0AD821002F460014AA14 /* fitpolo705Interface.m */,
-			);
-			path = interface;
-			sourceTree = "<group>";
-		};
-		008D0AD921002F460014AA14 /* log */ = {
-			isa = PBXGroup;
-			children = (
-				008D0ADA21002F460014AA14 /* fitpolo705LogManager.h */,
-				008D0ADB21002F460014AA14 /* fitpolo705LogManager.m */,
-			);
-			path = log;
-			sourceTree = "<group>";
-		};
-		008D0AE821002F460014AA14 /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				008D0AEB21002F460014AA14 /* fitpolo705Parser.h */,
-				008D0AEC21002F460014AA14 /* fitpolo705Parser.m */,
-			);
-			path = Parser;
-			sourceTree = "<group>";
-		};
-		008D0AF021002F460014AA14 /* Tasks */ = {
-			isa = PBXGroup;
-			children = (
-				008D0AF121002F460014AA14 /* fitpolo705DataParser.h */,
-				008D0AF221002F460014AA14 /* fitpolo705DataParser.m */,
-				008D0AF321002F460014AA14 /* fitpolo705TaskIDDefines.h */,
-				008D0AF421002F460014AA14 /* fitpolo705TaskOperation.h */,
-				008D0AF521002F460014AA14 /* fitpolo705TaskOperation.m */,
-			);
-			path = Tasks;
-			sourceTree = "<group>";
-		};
-		008D0AF621002F460014AA14 /* Upgrade */ = {
-			isa = PBXGroup;
-			children = (
-				008D0AF721002F460014AA14 /* fitpolo705UpgradeManager.h */,
-				008D0AF821002F460014AA14 /* fitpolo705UpgradeManager.m */,
-			);
-			path = Upgrade;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,21 +212,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				008D0AFF21002F460014AA14 /* fitpolo705LogManager.m in Sources */,
-				008D0AFB21002F460014AA14 /* fitpolo705Interface+HeartRate.m in Sources */,
-				008D0B0921002F460014AA14 /* fitpolo705TaskOperation.m in Sources */,
+				0012563E21082D3200E4BC6A /* fitpolo705CentralManager.m in Sources */,
+				0012563D21082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m in Sources */,
 				003C3C0820A2F03300D0EF40 /* HCKMainViewController.m in Sources */,
-				008D0B0821002F460014AA14 /* fitpolo705DataParser.m in Sources */,
-				008D0AFC21002F460014AA14 /* fitpolo705Interface+Settings.m in Sources */,
-				008D0B0621002F460014AA14 /* fitpolo705Parser.m in Sources */,
-				0055B7802101CD6400F7DECC /* fitpolo705Models.m in Sources */,
-				008D0AFD21002F460014AA14 /* fitpolo705Interface+StepGauge.m in Sources */,
-				008D0AFE21002F460014AA14 /* fitpolo705Interface.m in Sources */,
-				008D0B0A21002F460014AA14 /* fitpolo705UpgradeManager.m in Sources */,
-				008D0B16210095860014AA14 /* CBPeripheral+Characteristic.m in Sources */,
+				0012564721082D3200E4BC6A /* fitpolo705TaskOperation.m in Sources */,
 				003C3BB820A2EFC600D0EF40 /* main.m in Sources */,
-				008D0AF921002F460014AA14 /* fitpolo705CentralManager.m in Sources */,
+				0012564221082D3200E4BC6A /* fitpolo705Interface+StepGauge.m in Sources */,
 				003C3BAA20A2EFC600D0EF40 /* AppDelegate.m in Sources */,
+				0012564821082D3200E4BC6A /* fitpolo705UpgradeManager.m in Sources */,
+				0012564521082D3200E4BC6A /* fitpolo705Models.m in Sources */,
+				0012564321082D3200E4BC6A /* fitpolo705Interface.m in Sources */,
+				0012564021082D3200E4BC6A /* fitpolo705Interface+HeartRate.m in Sources */,
+				0012563F21082D3200E4BC6A /* fitpolo705DataParser.m in Sources */,
+				0012564121082D3200E4BC6A /* fitpolo705Interface+Settings.m in Sources */,
+				0012564421082D3200E4BC6A /* fitpolo705LogManager.m in Sources */,
+				0012564621082D3200E4BC6A /* fitpolo705Parser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

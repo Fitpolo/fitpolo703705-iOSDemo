@@ -8,26 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "fitpolo705TaskIDDefines.h"
-
-/**
- 发送命令回调
- */
-typedef void(^communicationCommandBlock)(void);
-
-/**
- 任务完成回调
- 
- @param error 是否产生了超时错误
- @param operationID 当前任务ID
- @param returnData 返回的数据
- */
-typedef void(^communicationCompleteBlock)(NSError *error, fitpolo705TaskOperationID operationID, id returnData);
+#import <CoreBluetooth/CoreBluetooth.h>
 
 extern NSString *const fitpolo705AdditionalInformation;
 extern NSString *const fitpolo705DataInformation;
 extern NSString *const fitpolo705DataStatusLev;
 
-@protocol CBPeripheralDelegate;
 @interface fitpolo705TaskOperation : NSOperation<CBPeripheralDelegate>
 
 /**
@@ -46,7 +32,7 @@ extern NSString *const fitpolo705DataStatusLev;
  */
 - (instancetype)initOperationWithID:(fitpolo705TaskOperationID)operationID
                            resetNum:(BOOL)resetNum
-                       commandBlock:(communicationCommandBlock)commandBlock
-                      completeBlock:(communicationCompleteBlock)completeBlock;
+                       commandBlock:(void (^)(void))commandBlock
+                      completeBlock:(void (^)(NSError *error, fitpolo705TaskOperationID operationID, id returnData))completeBlock;
 
 @end

@@ -12,23 +12,10 @@
 #import "fitpolo705LogManager.h"
 #import "fitpolo705Parser.h"
 #import "fitpolo705Defines.h"
-#import "CBPeripheral+Characteristic.h"
+#import "CBPeripheral+fitpolo705Characteristic.h"
 #import "fitpolo705TaskOperation.h"
 
-typedef NS_ENUM(NSInteger, currentManagerAction) {
-    currentManagerActionDefault,
-    currentManagerActionScan,
-    currentManagerActionConnectPeripheral,
-    currentManagerActionConnectPeripheralWithScan,
-};
-static NSInteger const scanConnectMacCount = 2;
-static fitpolo705CentralManager *manager = nil;
-static dispatch_once_t onceToken;
-NSString *const fitpolo705PeripheralConnectStateChanged = @"fitpolo705PeripheralConnectStateChanged";
-//外设固件升级结果通知,由于升级固件采用的是无应答定时器发送数据包，所以当产生升级结果的时候，需要靠这个通知来结束升级过程
-NSString *const fitpolo705PeripheralUpdateResultNotification = @"fitpolo705PeripheralUpdateResultNotification";
-
-@interface CBPeripheral (Scan)
+@interface CBPeripheral (fitpolo705Scan)
 
 /**
  703广播标识符为03,705广播标识符为05
@@ -60,7 +47,7 @@ static const char *peripheralNameKey = "peripheralNameKey";
 static const char *macAddressKey = "macAddressKey";
 static const char *typeIdentyKey = "typeIdentyKey";
 
-@implementation CBPeripheral (Scan)
+@implementation CBPeripheral (fitpolo705Scan)
 
 - (void)parseAdvData:(NSDictionary *)advDic{
     if (!advDic || advDic.allValues.count == 0) {
@@ -129,6 +116,19 @@ static const char *typeIdentyKey = "typeIdentyKey";
 }
 @end
 
+typedef NS_ENUM(NSInteger, currentManagerAction) {
+    currentManagerActionDefault,
+    currentManagerActionScan,
+    currentManagerActionConnectPeripheral,
+    currentManagerActionConnectPeripheralWithScan,
+};
+static NSInteger const scanConnectMacCount = 2;
+static fitpolo705CentralManager *manager = nil;
+static dispatch_once_t onceToken;
+NSString *const fitpolo705PeripheralConnectStateChanged = @"fitpolo705PeripheralConnectStateChanged";
+//外设固件升级结果通知,由于升级固件采用的是无应答定时器发送数据包，所以当产生升级结果的时候，需要靠这个通知来结束升级过程
+NSString *const fitpolo705PeripheralUpdateResultNotification = @"fitpolo705PeripheralUpdateResultNotification";
+
 @interface fitpolo705CentralManager()<CBCentralManagerDelegate,CBPeripheralDelegate>
 
 @property (nonatomic, strong)CBCentralManager *centralManager;
@@ -141,44 +141,22 @@ static const char *typeIdentyKey = "typeIdentyKey";
 
 @property (nonatomic, copy)fitpolo705ConnectPeripheralSuccessBlock connectSucBlock;
 
-/**
- 扫描定时器
- */
 @property (nonatomic, strong)dispatch_source_t scanTimer;
 
-/**
- 连接定时器，超过指定时间将会视为连接失败
- */
 @property (nonatomic, strong)dispatch_source_t connectTimer;
 
-/**
- 当前运行方式
- */
 @property (nonatomic, assign)currentManagerAction managerAction;
 
-/**
- 完成了一个扫描周期
- */
 @property (nonatomic, assign)BOOL scanTimeout;
 
-/**
- 用扫描方式连接设备的时候，未扫到设备次数，超过指定次数需要结束扫描，连接设备失败
- */
 @property (nonatomic, assign)NSInteger scanConnectCount;
 
-/**
- 扫描方式连接设备时候的标识符，UUID、mac地址、mac地址低四位
- */
 @property (nonatomic, copy)NSString *identifier;
 
-/**
- 当前连接状态
- */
 @property (nonatomic, assign)fitpolo705ConnectStatus connectStatus;
 
-/**
- 扫描或者通过扫描方式连接设备的时候，需要给出指定设备的类型，703、705目前共用一套SDK
- */
+@property (nonatomic, assign)fitpolo705CentralManagerState centralStatus;
+
 @property (nonatomic, assign)operationPeripheralType peripheralType;
 
 @property (nonatomic, strong)NSOperationQueue *operationQueue;
@@ -193,7 +171,7 @@ static const char *typeIdentyKey = "typeIdentyKey";
 }
 
 //生成唯一的实例
--(instancetype) initUniqueInstance {
+-(instancetype) initInstance {
     if (self = [super init]) {
         _centralManagerQueue = dispatch_queue_create("moko.com.centralManager", DISPATCH_QUEUE_SERIAL);
         _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:_centralManagerQueue];
@@ -204,13 +182,13 @@ static const char *typeIdentyKey = "typeIdentyKey";
 + (fitpolo705CentralManager *)sharedInstance{
     dispatch_once(&onceToken, ^{
         if (!manager) {
-            manager = [[super alloc] initUniqueInstance];
+            manager = [[super alloc] initInstance];
         }
     });
     return manager;
 }
 
-+ (void)attempDealloc{
++ (void)singletonDestroyed{
     onceToken = 0; // 只有置成0,GCD才会认为它从未执行过.它默认为0.这样才能保证下次再次调用shareInstance的时候,再次创建对象.
     manager = nil;
 }
@@ -218,13 +196,14 @@ static const char *typeIdentyKey = "typeIdentyKey";
 #pragma mark - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central{
-    if ([self.managerStateDelegate respondsToSelector:@selector(centralManagerStateChanged:manager:)]) {
+    fitpolo705CentralManagerState managerState = fitpolo705CentralManagerStateUnable;
+    if (central.state == CBCentralManagerStatePoweredOn) {
+        managerState = fitpolo705CentralManagerStateEnable;
+    }
+    self.centralStatus = managerState;
+    if ([self.managerStateDelegate respondsToSelector:@selector(fitpolo705CentralStateChanged:manager:)]) {
         fitpolo705_main_safe(^{
-            fitpolo705CentralManagerState managerState = fitpolo705CentralManagerStateUnable;
-            if (central.state == CBCentralManagerStatePoweredOn) {
-                managerState = fitpolo705CentralManagerStateEnable;
-            }
-            [self.managerStateDelegate centralManagerStateChanged:managerState manager:manager];
+            [self.managerStateDelegate fitpolo705CentralStateChanged:managerState manager:manager];
         });
     }
     if (central.state == CBCentralManagerStatePoweredOn) {
@@ -243,8 +222,8 @@ static const char *typeIdentyKey = "typeIdentyKey";
         self.peripheralType = operationPeripheralTypeUnknow;
         [self.centralManager stopScan];
         fitpolo705_main_safe(^{
-            if ([self.scanDelegate respondsToSelector:@selector(centralManagerStopScan:)]) {
-                [self.scanDelegate centralManagerStopScan:manager];
+            if ([self.scanDelegate respondsToSelector:@selector(fitpolo705CentralStopScan:)]) {
+                [self.scanDelegate fitpolo705CentralStopScan:manager];
             }
         });
         return;
@@ -309,8 +288,8 @@ static const char *typeIdentyKey = "typeIdentyKey";
         [self connectPeripheralFailed];
         return;
     }
-    [self.connectedPeripheral updateCharacteristicsForService:service];
-    if ([self.connectedPeripheral connectSuccess]) {
+    [self.connectedPeripheral update705CharacteristicsForService:service];
+    if ([self.connectedPeripheral fitpolo705ConnectSuccess]) {
         [self connectPeripheralSuccess];
     }
 }
@@ -351,6 +330,7 @@ static const char *typeIdentyKey = "typeIdentyKey";
 }
 
 #pragma mark - Public method
+#pragma mark - scan
 - (void)startScanPeripheral:(operationPeripheralType)peripheralType{
     if (self.centralManager.state != CBCentralManagerStatePoweredOn || peripheralType == operationPeripheralTypeUnknow) {
         //蓝牙状态不可用
@@ -358,9 +338,9 @@ static const char *typeIdentyKey = "typeIdentyKey";
     }
     self.peripheralType = peripheralType;
     self.managerAction = currentManagerActionScan;
-    if ([self.scanDelegate respondsToSelector:@selector(centralManagerStartScan:)]) {
+    if ([self.scanDelegate respondsToSelector:@selector(fitpolo705CentralStartScan:)]) {
         fitpolo705_main_safe(^{
-            [self.scanDelegate centralManagerStartScan:manager];
+            [self.scanDelegate fitpolo705CentralStartScan:manager];
         });
     }
     //日志
@@ -375,12 +355,14 @@ static const char *typeIdentyKey = "typeIdentyKey";
     [self.centralManager stopScan];
     self.managerAction = currentManagerActionDefault;
     self.peripheralType = operationPeripheralTypeUnknow;
-    if ([self.scanDelegate respondsToSelector:@selector(centralManagerStopScan:)]) {
+    if ([self.scanDelegate respondsToSelector:@selector(fitpolo705CentralStopScan:)]) {
         fitpolo705_main_safe(^{
-            [self.scanDelegate centralManagerStopScan:manager];
+            [self.scanDelegate fitpolo705CentralStopScan:manager];
         });
     }
 }
+
+#pragma mark - connect
 
 /**
  根据标识符和连接方式来连接指定的外设
@@ -580,6 +562,7 @@ static const char *typeIdentyKey = "typeIdentyKey";
         [self.operationQueue cancelAllOperations];
     }
     self.connectedPeripheral = nil;
+    self.connectedPeripheral = peripheral;
     self.managerAction = currentManagerActionConnectPeripheral;
     self.connectSucBlock = sucBlock;
     self.connectFailBlock = failedBlock;
@@ -639,8 +622,8 @@ static const char *typeIdentyKey = "typeIdentyKey";
     [self resetOriSettings];
     if (self.connectedPeripheral) {
         [self.centralManager cancelPeripheralConnection:self.connectedPeripheral];
+        self.connectedPeripheral.delegate = nil;
     }
-    self.connectedPeripheral.delegate = nil;
     self.connectedPeripheral = nil;
     [self updateManagerStateConnectState:fitpolo705ConnectStatusConnectedFailed];
     [fitpolo705Parser operationConnectFailedBlock:self.connectFailBlock];
@@ -730,12 +713,12 @@ static const char *typeIdentyKey = "typeIdentyKey";
     }
     if (self.managerAction == currentManagerActionScan) {
         //扫描情况下
-        if ([self.scanDelegate respondsToSelector:@selector(centralManagerScanningNewPeripheral:macAddress:peripheralName:centralManager:)]) {
+        if ([self.scanDelegate respondsToSelector:@selector(fitpolo705CentralScanningNewPeripheral:macAddress:peripheralName:centralManager:)]) {
             fitpolo705_main_safe(^{
-                [self.scanDelegate centralManagerScanningNewPeripheral:peripheral
-                                                            macAddress:peripheral.macAddress
-                                                        peripheralName:peripheral.peripheralName
-                                                        centralManager:manager];
+                [self.scanDelegate fitpolo705CentralScanningNewPeripheral:peripheral
+                                                               macAddress:peripheral.macAddress
+                                                           peripheralName:peripheral.peripheralName
+                                                           centralManager:manager];
             });
         }
         return;
@@ -781,9 +764,9 @@ static const char *typeIdentyKey = "typeIdentyKey";
 - (void)updateManagerStateConnectState:(fitpolo705ConnectStatus)state{
     self.connectStatus = state;
     [[NSNotificationCenter defaultCenter] postNotificationName:fitpolo705PeripheralConnectStateChanged object:nil];
-    if ([self.managerStateDelegate respondsToSelector:@selector(centralManagerConnectStateChanged:manager:)]) {
+    if ([self.managerStateDelegate respondsToSelector:@selector(fitpolo705PeripheralConnectStateChanged:manager:)]) {
         fitpolo705_main_safe(^{
-            [self.managerStateDelegate centralManagerConnectStateChanged:state manager:manager];
+            [self.managerStateDelegate fitpolo705PeripheralConnectStateChanged:state manager:manager];
         });
     }
 }

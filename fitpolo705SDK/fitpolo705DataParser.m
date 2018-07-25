@@ -10,7 +10,7 @@
 #import "fitpolo705Defines.h"
 #import "fitpolo705LogManager.h"
 #import "fitpolo705Parser.h"
-#import "CBPeripheral+Characteristic.h"
+#import "CBPeripheral+fitpolo705Characteristic.h"
 #import "fitpolo705Models.h"
 
 NSString *const fitpolo705CommunicationDataNum = @"fitpolo705CommunicationDataNum";
