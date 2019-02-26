@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		000A38232224EE2800C82948 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 000A38222224EE2800C82948 /* README.md */; };
 		0012563D21082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562321082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m */; };
 		0012563E21082D3200E4BC6A /* fitpolo705CentralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562521082D3200E4BC6A /* fitpolo705CentralManager.m */; };
 		0012563F21082D3200E4BC6A /* fitpolo705DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012562721082D3200E4BC6A /* fitpolo705DataParser.m */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		000A38222224EE2800C82948 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0012562221082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBPeripheral+fitpolo705Characteristic.h"; sourceTree = "<group>"; };
 		0012562321082D3200E4BC6A /* CBPeripheral+fitpolo705Characteristic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheral+fitpolo705Characteristic.m"; sourceTree = "<group>"; };
 		0012562421082D3200E4BC6A /* fitpolo705CentralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fitpolo705CentralManager.h; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 		003C3B9C20A2EFC600D0EF40 = {
 			isa = PBXGroup;
 			children = (
+				000A38222224EE2800C82948 /* README.md */,
 				0012562121082D3200E4BC6A /* fitpolo705SDK */,
 				0055B7812101D3B000F7DECC /* BORD_805_01.bin */,
 				003C3BA720A2EFC600D0EF40 /* fitpolo705SDKDemo */,
@@ -200,6 +203,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				000A38232224EE2800C82948 /* README.md in Resources */,
 				003C3BB220A2EFC600D0EF40 /* Assets.xcassets in Resources */,
 				0055B7822101D3B000F7DECC /* BORD_805_01.bin in Resources */,
 			);
